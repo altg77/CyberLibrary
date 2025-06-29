@@ -99,7 +99,7 @@
 
 .book-item {
     flex-shrink: 0; /* Prevents items from shrinking */
-    width: 150px; /* Adjust as needed */
+    width: 145px; /* Adjust as needed */
     text-align: center;
     cursor: pointer;
     position: relative;
@@ -318,25 +318,3 @@
     font-weight: bold;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .detailed-book-content {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-    .detailed-book-cover {
-        width: 150px;
-    }
-    .detailed-book-info {
-        min-width: unset;
-        width: 100%;
-    }
-    .detailed-book-buttons {
-        flex-direction: column;
-        align-items: center;
-    }
-    .btn {
-        width: 80%;
-    }
-}

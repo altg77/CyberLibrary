@@ -11,21 +11,29 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        document.getElementById('uploadImagem').addEventListener('change', function (event) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                var output = document.getElementById('currentProfileImage');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        });
+    </script>
 }
 
 <div class="profile-container">
     <h1>Minha Conta</h1>
 
     <form asp-controller="Usuarios" asp-action="Atualizar" method="post" enctype="multipart/form-data">
-
         @Html.AntiForgeryToken()
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="Id" />
-        <input type="hidden" asp-for="Senha" />
         <input type="hidden" asp-for="Cargo" />
-        <input type="hidden" asp-for="ImagemUrl" />
         <input type="hidden" asp-for="Login" />
         <input type="hidden" asp-for="TurmaId" />
+        <input type="hidden" asp-for="Senha" />
 
         <div class="form-group">
             <label asp-for="Nome" class="control-label"></label>
@@ -42,9 +50,21 @@
             <input asp-for="Telefone" class="form-control" />
             <span asp-validation-for="Telefone" class="text-danger"></span>
         </div>
-        
+
+        <div class="form-group profile-image-preview">
+            <label class="control-label">Foto de Perfil Atual</label>
+            @if (Model.ImagemUrl != null && Model.ImagemUrl.Length > 0)
+            {
+                <img id="currentProfileImage" src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.ImagemUrl))" alt="Foto de Perfil" class="img-thumbnail" style="max-width: 150px; max-height: 150px; border-radius: 50%;" />
+            }
+            else
+            {
+                <img id="currentProfileImage" src="/img/default-profile.png" alt="Foto de Perfil Padrão" class="img-thumbnail" style="max-width: 150px; max-height: 150px; border-radius: 50%;" />
+            }
+        </div>
+
         <div class="form-group">
-            <label for="ProfileImageFile" class="control-label">Foto de Perfil (Upload)</label>
+            <label for="uploadImagem" class="control-label">Alterar Foto de Perfil</label>
             <input type="file" id="uploadImagem" name="ImagemArq" class="form-control" accept="image/*" />
             <span class="text-danger"></span>
         </div>

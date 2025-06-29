@@ -30,33 +30,39 @@ namespace CyberLibrary2.repository
             return banco_context.Usuarios.FirstOrDefault(x => x.Id == id);
         }
 
+        // Dentro de UsuarioR.cs
+
         public Usuario Atualizar(Usuario usuario)
         {
-            Usuario usuarioDB = BuscarId(usuario.Id);
+            Usuario usuarioDB = banco_context.Usuarios.FirstOrDefault(x => x.Id == usuario.Id);
 
-            if (usuarioDB == null)
+
+            if (banco_context.Usuarios.Any(u => u.Login == usuario.Login && u.Id != usuario.Id))
             {
-                throw new Exception("Usuário não foi encontrado para atualização.");
+                throw new Exception("O login informado já está em uso por outro usuário.");
+            }
+
+            // Verifique se o novo email já existe para outro usuário
+            if (banco_context.Usuarios.Any(u => u.Email == usuario.Email && u.Id != usuario.Id))
+            {
+                throw new Exception("O email informado já está em uso por outro usuário.");
             }
 
             usuarioDB.Nome = usuario.Nome;
             usuarioDB.Email = usuario.Email;
             usuarioDB.Cargo = usuario.Cargo;
             usuarioDB.Login = usuario.Login;
+            usuarioDB.Telefone = usuario.Telefone;
+            usuarioDB.TurmaId = usuario.TurmaId;
 
+            // Apenas atualize a senha se ela for fornecida (não vazia/nula)
             if (!string.IsNullOrEmpty(usuario.Senha))
             {
                 usuarioDB.Senha = usuario.Senha;
             }
 
-            if (usuario.ImagemUrl != null && usuario.ImagemUrl.Length > 0)
-            {
-                usuarioDB.ImagemUrl = usuario.ImagemUrl;
-            }
-
+            // A imagem agora será tratada pela lógica do controlador
             usuarioDB.ImagemUrl = usuario.ImagemUrl;
-            usuarioDB.Telefone = usuario.Telefone;
-            usuarioDB.TurmaId = usuario.TurmaId;
 
             banco_context.Usuarios.Update(usuarioDB);
             banco_context.SaveChanges();
@@ -76,12 +82,10 @@ namespace CyberLibrary2.repository
             banco_context.SaveChanges();
             return true;
         }
-        
+
         public Usuario BuscarPorLoginESenha(string login, string senha)
         {
-            // In a real application, you would query your database here.
-            // And use password hashing (e.g., BCrypt.Net.BCrypt.Verify(senha, user.SenhaHash)).
-            return banco_context.Usuarios.FirstOrDefault(u => u.Login == login && u.Senha == senha); // This is for demo only!
+            return banco_context.Usuarios.FirstOrDefault(u => u.Login == login && u.Senha == senha);
         }
     }
 }

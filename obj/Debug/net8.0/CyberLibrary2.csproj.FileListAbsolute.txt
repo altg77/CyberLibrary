@@ -143,3 +143,4 @@ E:\Tiago\Documents\CyberLibrary2\bin\Debug\net8.0\runtimes\win\lib\net6.0\System
 E:\Tiago\Documents\CyberLibrary2\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 E:\Tiago\Documents\CyberLibrary2\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 E:\Tiago\Documents\CyberLibrary2\obj\Debug\net8.0\CyberLib.C79F005A.Up2Date
+E:\Tiago\Documents\CyberLibrary2\obj\Debug\net8.0\CyberLibrary2.sourcelink.json

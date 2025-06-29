@@ -50,8 +50,14 @@ public class UsuariosController : Controller
                 new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
                 new Claim(ClaimTypes.Name, usuario.Nome),
                 new Claim(ClaimTypes.Email, usuario.Email),
-                new Claim(ClaimTypes.Role, usuario.Cargo) 
+                new Claim(ClaimTypes.Role, usuario.Cargo)
             };
+
+            // Add ImagemUrl as a claim if it exists
+            if (usuario.ImagemUrl != null && usuario.ImagemUrl.Length > 0)
+            {
+                claims.Add(new Claim("ProfilePicture", Convert.ToBase64String(usuario.ImagemUrl)));
+            }
 
             var claimsIdentity = new ClaimsIdentity(
                 claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -67,19 +73,17 @@ public class UsuariosController : Controller
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
 
-            TempData["MensagemSucesso"] = $"Bem-vindo, {usuario.Nome}!";
-
-            if (usuario.Cargo == "Bibliotecario") 
+            if (usuario.Cargo == "Bibliotecario")
             {
                 return RedirectToAction("Index", "Bibliotecario");
             }
-            else if (usuario.Cargo == "Aluno") 
+            else if (usuario.Cargo == "Aluno")
             {
                 return RedirectToAction("Index", "Aluno");
             }
             else
             {
-                return RedirectToAction("Login", "Usuarios"); 
+                return RedirectToAction("Login", "Usuarios");
             }
         }
 
@@ -91,14 +95,24 @@ public class UsuariosController : Controller
     public async Task<IActionResult> Logout()
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        TempData["MensagemSucesso"] = "Você foi desconectado com sucesso.";
         return RedirectToAction("Login", "Usuarios");
     }
 
     [Authorize]
-    public IActionResult Perfil(int id)
+    public IActionResult Perfil()
     {
-        var usuario = _usuarioRep.BuscarId(id);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return RedirectToAction("Login"); // Or handle unauthorized access
+        }
+
+        var usuario = _usuarioRep.BuscarId(int.Parse(userId));
+        if (usuario == null)
+        {
+            return NotFound(); // Or handle user not found
+        }
         return View(usuario);
     }
 
@@ -128,22 +142,86 @@ public class UsuariosController : Controller
     }
 
     [HttpPost]
-    public async Task<ActionResult> Atualizar(Usuario usuario, IFormFile? ImagemArq)
+    public async Task<ActionResult> Atualizar(Usuario usuario, IFormFile? ImagemArq, string? NovaSenha, string? ConfirmarSenha)
     {
-        if (ModelState.IsValid)
+        // Recupere o usuário existente do banco de dados para reter a senha e a imagem atuais, se não forem atualizadas
+        var existingUsuario = _usuarioRep.BuscarId(usuario.Id);
+        if (existingUsuario == null)
         {
-            if (ImagemArq != null && ImagemArq.Length > 0)
+            return NotFound(); // Usuário não encontrado, trate de acordo
+        }
+
+        // Mantenha a imagem atual se nenhuma nova imagem for carregada
+        byte[]? imageBytes = existingUsuario.ImagemUrl;
+
+        if (ImagemArq != null && ImagemArq.Length > 0)
+        {
+            using (var memoryStream = new MemoryStream())
             {
-                using (var memoryStream = new MemoryStream())
-                {
-                    await ImagemArq.CopyToAsync(memoryStream);
-                    usuario.ImagemUrl = memoryStream.ToArray();
-                }
+                await ImagemArq.CopyToAsync(memoryStream);
+                imageBytes = memoryStream.ToArray();
             }
         }
 
-        _usuarioRep.Atualizar(usuario);
-        return RedirectToAction("Perfil");
+        // Atualize as propriedades do usuário a partir do envio do formulário
+        existingUsuario.Nome = usuario.Nome;
+        existingUsuario.Email = usuario.Email;
+        existingUsuario.Telefone = usuario.Telefone;
+        existingUsuario.ImagemUrl = imageBytes; // Atribua os bytes da imagem potencialmente nova ou existente
+
+        // Lide com a atualização da senha
+        if (!string.IsNullOrEmpty(NovaSenha))
+        {
+            if (NovaSenha != ConfirmarSenha)
+            {
+                ModelState.AddModelError("NovaSenha", "A nova senha e a confirmação de senha não coincidem.");
+                return View("Perfil", existingUsuario); // Retorne para a view do perfil com erro
+            }
+            // Em uma aplicação real, você deve fazer hash da nova senha aqui
+            existingUsuario.Senha = NovaSenha; // Apenas para demonstração, atribuindo diretamente
+        }
+
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                _usuarioRep.Atualizar(existingUsuario);
+
+                var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, existingUsuario.Id.ToString()),
+                new Claim(ClaimTypes.Name, existingUsuario.Nome),
+                new Claim(ClaimTypes.Email, existingUsuario.Email),
+                new Claim(ClaimTypes.Role, existingUsuario.Cargo)
+            };
+
+                if (existingUsuario.ImagemUrl != null && existingUsuario.ImagemUrl.Length > 0)
+                {
+                    claims.Add(new Claim("ProfilePicture", Convert.ToBase64String(existingUsuario.ImagemUrl)));
+                }
+
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var authProperties = new AuthenticationProperties
+                {
+                    IsPersistent = true,
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30)
+                };
+
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity),
+                    authProperties);
+
+                TempData["MensagemSucesso"] = "Perfil atualizado com sucesso!";
+                return RedirectToAction("Perfil");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, $"Erro ao atualizar perfil: {ex.Message}");
+                Debug.WriteLine($"Erro ao atualizar perfil: {ex.Message}");
+            }
+        }
+        return View("Perfil", existingUsuario);
     }
 
     [HttpPost]
