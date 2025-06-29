@@ -1,0 +1,97 @@
+.profile-container h1 {
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    text-align: left;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.profile-container form {
+    text-align: left; 
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #555;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box; /* Inclui padding e borda na largura total */
+}
+
+.text-danger {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 5px;
+    display: block;
+}
+
+.profile-container .img-thumbnail {
+    display: block; 
+    max-width: 120px;
+    height: auto; 
+    border: 1px solid #ddd;
+    border-radius: 8px; 
+    padding: 3px; 
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); 
+    object-fit: cover;
+}
+
+.btn-primary {
+    background-color: var(--primary-color) !important;
+    color: #fff;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 700;
+    transition: background-color 0.3s ease;
+    width: auto; 
+    display: inline-block; 
+}
+
+.btn-primary:hover {
+    background-color: #000000 !important;
+}
+
+@media (max-width: 768px) {
+    .profile-container {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .profile-container h1 {
+        font-size: 24px;
+    }
+}

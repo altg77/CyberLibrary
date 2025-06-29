@@ -1,0 +1,163 @@
+﻿@using System.Security.Claims
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] | CyberLibrary</title>
+
+     @await RenderSectionAsync("Styles", required: false)
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+        integrity="sha512-Fo3rlroqQj5T5s/r6j4n9+F7Kz0T1n+w+bN2zYg+MhB8bFj2fA5zJ4L6pE/6aD1tQ9w3g/Jk/zR/Xk/Ym/A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/CyberLibrary2.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-0">
+            <div class="container-fluid">
+                <div class="logo-container">
+                    <img src="/img/white.png" alt="Logo do site" id="logo" />
+                </div>
+
+                <ul class="navbar-nav">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <img src="" alt="Foto de Perfil" class="rounded-circle"
+                                style="width: 40px; height: 40px;">
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-name">@User.Identity.Name</a></li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li><a class="dropdown-item" asp-controller="Usuarios" asp-action="Perfil">Minha
+                                    Conta</a>
+                            </li>
+                            <li><a class="dropdown-item" asp-controller="Usuario"
+                                    asp-action="Configuracoes">Configurações</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+                                <form asp-controller="Usuarios" asp-action="Logout" method="post">
+                                    <button type="submit" class="dropdown-item Sair">Sair</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                    }
+                </ul>
+            </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="content-wrapper">
+        @if (User.Identity.IsAuthenticated)
+        {
+             @if (User.Identity.IsAuthenticated && User.HasClaim(ClaimTypes.Role, "Bibliotecario"))
+            {
+                <aside class="sidebar sidebar-expanded">
+                    <nav class="sidebar-nav">
+                        <ul>
+                        <li>
+                            <a asp-controller="Bibliotecario" asp-action="Index"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+                        </li>
+                        <li>
+                            <a asp-controller="Emprestimos" asp-action="Index"><i class="fas fa-handshake"></i><span>Empréstimos</span></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fas fa-file-alt"></i> <span>Relatórios</span></a>
+                        </li>
+
+                        <li class="bardness"></li>
+
+                        <li>
+                            <a asp-controller="Livros" asp-action="Index"><i class="fas fa-book"></i> <span>Cadastro de Livros</span></a>
+                        </li>
+                        <li>
+                            <a asp-controller="Turmas" asp-action="Index"><i class="fas fa-users"></i> <span>Cadastro de Turmas</span></a>
+                        </li>
+                        <li>
+                            <a asp-controller="Categorias" asp-action="Index"><i class="fas fa-tags"></i> <span>Cadastro de Categorias</span></a>
+                        </li>
+                        <li>
+                            <a asp-controller="Usuarios" asp-action="Index"><i class="fas fa-user-plus"></i><span>Cadastro de Usuários</span></a>
+                        </li>
+
+                        <li class="bardness"></li>
+
+                        <li>
+                            <a asp-controller="Usuarios" asp-action="Perfil"><i class="fas fa-user-circle"></i> <span>Minha Conta</span></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fas fa-bell"></i> <span>Notificações</span></a>
+                        </li>
+                    </ul>
+                    </nav>
+                </aside>
+            }
+
+             @if (User.Identity.IsAuthenticated && User.HasClaim(ClaimTypes.Role, "Aluno"))
+            {
+                <aside class="sidebar sidebar-expanded">
+                    <nav class="sidebar-nav">
+                        <ul>
+                        <li>
+                            <a asp-controller="Aluno" asp-action="Index"><i class="fas fa-home"></i><span>Inicio</span></a>
+                        </li>
+                        <li>
+                            <a asp-controller="Aluno" asp-action="MeusLivros"><i class="fas fa-handshake"></i><span>Meus Livros</span></a>
+                        </li>
+
+                        <li class="bardness"></li>
+
+                        <li>
+                            <a asp-controller="Aluno" asp-action="Emprestimos"><i class="fas fa-book"></i> <span>Emprestimo de Livros</span></a>
+                        </li>
+                        <li>
+                            <a asp-controller="Aluno" asp-action="Devolvidos"><i class="fas fa-users"></i> <span>Devolvidos</span></a>
+                        </li>
+
+                        <li>
+                            <a asp-controller="Usuarios" asp-action="Perfil"><i class="fas fa-user-circle"></i> <span>Minha Conta</span></a>
+                        </li>
+                        <li>
+                            <a  asp-controller="Aluno" asp-action="Notificacoes"><i class="fas fa-bell"></i> <span>Notificações</span></a>
+                        </li>
+                    </ul>
+                    </nav>
+                </aside>
+            }
+        }
+
+        <div class="main-content">
+            <div class="container-fluid">
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

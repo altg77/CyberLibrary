@@ -1,0 +1,102 @@
+@model List<Usuario>
+
+@{
+    ViewData["Title"] = "Usuarios";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="/css/cadastros.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script>
+        function confirmarExclusao(id, nome) {
+            if (confirm(`Tem certeza que deseja excluir o usuário "${nome}" (ID: ${id})? Esta ação é irreversível!`)) {
+                document.getElementById(`formExcluir_${id}`).submit();
+            }
+        }
+    </script>
+}
+
+<div class="header-section">
+    <h1>Cadastro de Usuários</h1>
+    <p>Bem-vindo(s) ao Sistema do CyberLibrary</p>
+</div>
+
+<div class="content">
+    <div class="search-bar">
+        <input type="text" placeholder="pesquisar">
+    </div>
+
+    <a asp-controller="Usuarios" asp-action="Adicionar" type="button" class="btn btn-primary btn-lg"> + Adicionar</a>
+</div>
+
+@if (TempData["MensagemSucesso"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["MensagemSucesso"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["MensagemErro"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["MensagemErro"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Email</th>
+            <th scope="col">Turma</th>
+            <th scope="col">Telefone</th>
+            <th scope="col">Login</th>
+            <th scope="col">Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            @foreach (Usuario usuario in Model)
+            {
+                <tr>
+                    <th scope="row">@usuario.Id</th>
+                    <td>@usuario.Nome</td>
+                    <td>@usuario.Email</td>
+                    <td>
+                        @(usuario.TurmaId.HasValue? usuario.TurmaId.ToString() : "N/A")
+                    </td>
+                    <td>@(string.IsNullOrEmpty(usuario.Telefone) ? "N/A" : usuario.Telefone)</td>
+                    <td>@usuario.Login</td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-sm"
+                            onclick="confirmarExclusao(@usuario.Id, '@usuario.Nome')">Remover</button>
+
+                        <form id="formExcluir_@usuario.Id" asp-controller="Usuarios" asp-action="Excluir" method="post"
+                            class="d-none">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@usuario.Id" />
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="7" class="text-center">Nenhum usuário cadastrado.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="pagination">
+    <button class="pagination-button active">1</button>
+    <button class="pagination-button prev">Anterior</button>
+    <button class="pagination-button next">Próximo</button>
+</div>

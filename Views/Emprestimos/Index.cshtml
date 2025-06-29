@@ -1,0 +1,103 @@
+@model List<Emprestimo>
+@{
+    ViewData["Title"] = "Emprestimos";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="/css/cadastros.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script>
+        function confirmarExclusao(id, livroTitulo, usuarioNome) {
+            if (confirm(`Tem certeza que deseja remover o empréstimo do livro "${livroTitulo}" emprestado a "${usuarioNome}" (ID: ${id})? Esta ação é irreversível!`)) {
+                document.getElementById(`formExcluir_${id}`).submit();
+            }
+        }
+    </script>
+}
+
+<div class="header-section">
+    <h1>Todos os Empréstimos</h1>
+    <p>Gerencie os empréstimos de livros do CyberLibrary</p>
+</div>
+
+<div class="content">
+    <div class="search-bar">
+        <input type="text" placeholder="Pesquisar...">
+    </div>
+
+    <a asp-controller="Emprestimos" asp-action="Adicionar" class="btn btn-primary btn-lg">
+        + Adicionar
+    </a>
+</div>
+
+@if (TempData["MensagemSucesso"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["MensagemSucesso"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["MensagemErro"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["MensagemErro"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<table class="table table-striped mt-4">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Livro</th>
+            <th>Usuário</th>
+            <th>Data Empréstimo</th>
+            <th>Devolução Prevista</th>
+            <th>Devolução Real</th>
+            <th>Devolvido</th>
+            <th scope="col">Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var emprestimo in Model)
+            {
+                <tr>
+                    <td>@emprestimo.Id</td>
+                    <td>@emprestimo.Livro.Titulo</td>
+                    <td>@emprestimo.Usuario.Nome</td>
+                    <td>@emprestimo.DataEmprestimo.ToShortDateString()</td>
+                    <td>@(emprestimo.DataDevolucaoPrevista?.ToShortDateString() ?? "N/A")</td>
+                    <td>@(emprestimo.DataDevolucaoReal?.ToShortDateString() ?? "N/A")</td>
+                    <td>@(emprestimo.Devolvido ? "Sim" : "Não")</td>
+                    <td>
+                        <a asp-controller="Emprestimos" asp-action="Editar" asp-route-id="@emprestimo.Id" class="btn btn-primary btn-sm" role="button">Editar</a>
+
+                        <button type="button" class="btn btn-danger btn-sm"
+                                onclick="confirmarExclusao(@emprestimo.Id, '@emprestimo.Livro.Titulo', '@emprestimo.Usuario.Nome')">Excluir</button>
+
+                        <form id="formExcluir_@emprestimo.Id" asp-controller="Emprestimos" asp-action="Excluir" method="post" class="d-none">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@emprestimo.Id" />
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="8" class="text-center">Nenhum empréstimo encontrado.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="pagination">
+    <button class="pagination-button prev">Anterior</button>
+    <button class="pagination-button active">1</button>
+    <button class="pagination-button next">Próximo</button>
+</div>

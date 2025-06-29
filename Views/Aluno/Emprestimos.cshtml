@@ -1,0 +1,284 @@
+@{
+    ViewData["Title"] = "Empréstimo de Livros";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="/css/aluno.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="/js/Configures.js" asp-append-version="true"></script>
+}
+
+<div class="hero-banner">
+    <div class="container-hero">
+        <div class="banner-content">
+            <div class="slider-track">
+                <img src="https://podpop.com.br/PodPOP/wp-content/uploads/2021/12/Banner-livros-Podpop.jpg"
+                    alt="Banner de livros 1">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ8Sd5hUQ81sDRyNCmxxr4IfWUcSujUPpWFg&s"
+                    alt="Banner de livros 2">
+                <img src="https://www.estadao.com.br/recomenda/wp-content/uploads/2024/05/Design-sem-nome-19.png.webp"
+                    alt="Banner de livros 3">
+            </div>
+            <div class="slider-dots">
+                <span class="dot active" data-slide="0"></span>
+                <span class="dot" data-slide="1"></span>
+                <span class="dot" data-slide="2"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="head">
+    <h1>Recentes</h1>
+    <button class="view-more">VER MAIS</button>
+</div>
+
+<section class="book-carousel">
+    @if (Model.LivrosRecentes != null && Model.LivrosRecentes.Any())
+    {
+        @foreach (var livro in Model.LivrosRecentes)
+        {
+            <div class="book-item" data-book-id="@livro.Id" data-title="@livro.Titulo" data-author="@livro.Autor"
+                data-description="@livro.Sinopse" data-cover-url="@Url.Content(livro.CapaUrl ?? "/images/placeholder.png")"> @* Passe a URL da capa aqui *@
+                <img src="@Url.Content(livro.CapaUrl ?? "/images/placeholder.png")" alt="Capa do livro @livro.Titulo">
+                <p>@livro.Titulo</p>
+                <div class="book-options">
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Nenhum livro recente disponível.</p>
+    }
+</section>
+
+<section class="detailed-book-view hidden">
+    <div class="detailed-book-header">
+        <span class="detailed-book-path"></span>
+        <button class="close-detailed-view">&times;</button>
+    </div>
+    <div class="detailed-book-content">
+        <div class="detailed-book-cover">
+            <img src="" alt="Capa do livro">
+            <div class="book-actions">
+                <i class="fas fa-ellipsis-h"></i>
+            </div>
+        </div>
+        <div class="detailed-book-info">
+            <h2 class="detailed-book-title"></h2>
+            <p class="detailed-book-author"></p>
+            <div class="detailed-book-rating">
+                <i class="fas fa-star filled"></i>
+                <i class="fas fa-star filled"></i>
+                <i class="fas fa-star filled"></i>
+                <i class="fas fa-star filled"></i>
+                <i class="fas fa-star"></i>
+                <span class="star-count"></span>
+                <i class="fas fa-share-alt share-icon"></i>
+            </div>
+            <div class="detailed-book-buttons">
+                <button class="btn btn-borrow">RESERVAR</button>
+                <button class="btn btn-preview">PEGAR EMPRESTADO</button>
+            </div>
+            <p class="detailed-book-description"></p>
+            <div class="detailed-book-tags">
+                </div>
+            <button class="btn-view-more">VER MAIS ></button>
+        </div>
+    </div>
+</section>
+
+<div class="head">
+    <h1>Mangás disponíveis</h1>
+    <button class="view-more">VER MAIS</button>
+</div>
+
+<section class="book-carousel">
+    @if (Model.MangasDisponiveis != null && Model.MangasDisponiveis.Any())
+    {
+        @foreach (var livro in Model.MangasDisponiveis)
+        {
+            <div class="book-item" data-book-id="@livro.Id" data-title="@livro.Titulo" data-author="@livro.Autor"
+                data-description="@livro.Sinopse" data-cover-url="@Url.Content(livro.CapaUrl ?? "/images/placeholder.png")">
+                <img src="@Url.Content(livro.CapaUrl ?? "/images/placeholder.png")" alt="Capa do mangá @livro.Titulo">
+                <p>@livro.Titulo</p>
+                <div class="book-options">
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Nenhum mangá disponível.</p>
+    }
+</section>
+
+<section class="detailed-book-view hidden">
+    <div class="detailed-book-header">
+        <span class="detailed-book-path"></span>
+        <button class="close-detailed-view">&times;</button>
+    </div>
+    <div class="detailed-book-content">
+        <div class="detailed-book-cover">
+            <img src="" alt="Capa do livro">
+            <div class="book-actions">
+                <i class="fas fa-ellipsis-h"></i>
+            </div>
+        </div>
+        <div class="detailed-book-info">
+            <h2 class="detailed-book-title"></h2>
+            <p class="detailed-book-author"></p>
+            <div class="detailed-book-rating">
+                <i class="fas fa-star filled"></i>
+                <i class="fas fa-star filled"></i>
+                <i class="fas fa-star filled"></i>
+                <i class="fas fa-star filled"></i>
+                <i class="fas fa-star"></i>
+                <span class="star-count"></span>
+                <i class="fas fa-share-alt share-icon"></i>
+            </div>
+            <div class="detailed-book-buttons">
+                <button class="btn btn-borrow">RESERVAR</button>
+                <button class="btn btn-preview">PEGAR EMPRESTADO</button>
+            </div>
+            <p class="detailed-book-description"></p>
+            <div class="detailed-book-tags">
+                <span>Fiction</span>
+            </div>
+            <button class="btn-view-more">VER MAIS ></button>
+        </div>
+    </div>
+</section>
+
+
+<div class="head">
+    <h1>Para Explorar</h1>
+    <button class="view-more">VER MAIS</button>
+</div>
+
+<section class="book-carousel">
+    @if (Model.ParaExplorar != null && Model.ParaExplorar.Any())
+    {
+        @foreach (var livro in Model.ParaExplorar)
+        {
+            <div class="book-item" data-book-id="@livro.Id" data-title="@livro.Titulo" data-author="@livro.Autor"
+                data-description="@livro.Sinopse" data-cover-url="@Url.Content(livro.CapaUrl ?? "/images/placeholder.png")">
+                <img src="@Url.Content(livro.CapaUrl ?? "/images/placeholder.png")" alt="Capa do livro @livro.Titulo">
+                <p>@livro.Titulo</p>
+                <div class="book-options">
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Nenhum livro para explorar.</p>
+    }
+</section>
+
+<section class="detailed-book-view hidden">
+    <div class="detailed-book-header">
+        <span class="detailed-book-path"></span>
+        <button class="close-detailed-view">&times;</button>
+    </div>
+    <div class="detailed-book-content">
+        <div class="detailed-book-cover">
+            <img src="" alt="Capa do livro">
+            <div class="book-actions">
+                <i class="fas fa-ellipsis-h"></i>
+            </div>
+        </div>
+        <div class="detailed-book-info">
+            <h2 class="detailed-book-title"></h2>
+            <p class="detailed-book-author"></p>
+            <div class="detailed-book-rating">
+                <i class="fas fa-star filled"></i>
+                <i class="fas fa-star filled"></i>
+                <i class="fas fa-star filled"></i>
+                <i class="fas fa-star filled"></i>
+                <i class="fas fa-star"></i>
+                <span class="star-count"></span>
+                <i class="fas fa-share-alt share-icon"></i>
+            </div>
+            <div class="detailed-book-buttons">
+                <button class="btn btn-borrow">RESERVAR</button>
+                <button class="btn btn-preview">PEGAR EMPRESTADO</button>
+            </div>
+            <p class="detailed-book-description"></p>
+            <div class="detailed-book-tags">
+                <span>Fiction</span>
+            </div>
+            <button class="btn-view-more">VER MAIS ></button>
+        </div>
+    </div>
+</section>
+
+
+<div class="head">
+    <h1>Livros de Machado de Assis</h1>
+    <button class="view-more">VER MAIS</button>
+</div>
+
+<section class="book-carousel" id="machado-carousel">
+    @if (Model.LivrosMachadoDeAssis != null && Model.LivrosMachadoDeAssis.Any())
+    {
+        @foreach (var livro in Model.LivrosMachadoDeAssis)
+        {
+            <div class="book-item" data-book-id="@livro.Id" data-title="@livro.Titulo" data-author="@livro.Autor"
+                data-description="@livro.Sinopse" data-cover-url="@Url.Content(livro.CapaUrl ?? "/images/placeholder.png")">
+                <img src="@Url.Content(livro.CapaUrl ?? "/images/placeholder.png")" alt="Capa do livro @livro.Titulo">
+                <p>@livro.Titulo</p>
+                <div class="book-options">
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Nenhum livro de Machado de Assis disponível.</p>
+    }
+</section>
+
+<section class="detailed-book-view hidden">
+    <div class="detailed-book-header">
+        <span class="detailed-book-path"></span>
+        <button class="close-detailed-view">&times;</button>
+    </div>
+    <div class="detailed-book-content">
+        <div class="detailed-book-cover">
+            <img src="" alt="Capa do livro">
+            <div class="book-actions">
+                <i class="fas fa-ellipsis-h"></i>
+            </div>
+        </div>
+        <div class="detailed-book-info">
+            <h2 class="detailed-book-title"></h2>
+            <p class="detailed-book-author"></p>
+            <div class="detailed-book-rating">
+                <i class="fas fa-star filled"></i>
+                <i class="fas fa-star filled"></i>
+                <i class="fas fa-star filled"></i>
+                <i class="fas fa-star filled"></i>
+                <i class="fas fa-star"></i>
+                <span class="star-count"></span>
+                <i class="fas fa-share-alt share-icon"></i>
+            </div>
+            <div class="detailed-book-buttons">
+                <button class="btn btn-borrow">RESERVAR</button>
+                <button class="btn btn-preview">PEGAR EMPRESTADO</button>
+            </div>
+            <p class="detailed-book-description"></p>
+            <div class="detailed-book-tags">
+                <span>Fiction</span>
+            </div>
+            <button class="btn-view-more">VER MAIS ></button>
+        </div>
+    </div>
+</section>

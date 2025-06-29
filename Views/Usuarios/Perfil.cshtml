@@ -1,0 +1,65 @@
+@model Usuario
+@{
+    ViewData["Title"] = "Minha Conta";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="/css/perfil.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<div class="profile-container">
+    <h1>Minha Conta</h1>
+
+    <form asp-controller="Usuarios" asp-action="Atualizar" method="post" enctype="multipart/form-data">
+
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Senha" />
+        <input type="hidden" asp-for="Cargo" />
+        <input type="hidden" asp-for="ImagemUrl" />
+        <input type="hidden" asp-for="Login" />
+        <input type="hidden" asp-for="TurmaId" />
+
+        <div class="form-group">
+            <label asp-for="Nome" class="control-label"></label>
+            <input asp-for="Nome" class="form-control" />
+            <span asp-validation-for="Nome" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Email" class="control-label"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Telefone" class="control-label"></label>
+            <input asp-for="Telefone" class="form-control" />
+            <span asp-validation-for="Telefone" class="text-danger"></span>
+        </div>
+        
+        <div class="form-group">
+            <label for="ProfileImageFile" class="control-label">Foto de Perfil (Upload)</label>
+            <input type="file" id="uploadImagem" name="ImagemArq" class="form-control" accept="image/*" />
+            <span class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="NovaSenha" class="control-label">Nova Senha</label>
+            <input type="password" id="NovaSenha" name="NovaSenha" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="ConfirmarSenha" class="control-label">Confirmar Nova Senha</label>
+            <input type="password" id="ConfirmarSenha" name="ConfirmarSenha" class="form-control" />
+        </div>
+
+        <div class="form-group mt-3">
+            <input type="submit" value="Salvar Alterações" class="btn btn-primary" />
+        </div>
+    </form>
+</div>

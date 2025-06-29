@@ -1,0 +1,124 @@
+@model List<Livro>
+@{
+    ViewData["Title"] = "Livros";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="/css/cadastros.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script>
+        function confirmarExclusao(id, titulo) {
+            if (confirm(`Tem certeza que deseja excluir o livro "${titulo}" (ID: ${id})? Esta ação é irreversível!`)) {
+                document.getElementById(`formExcluir_${id}`).submit();
+            }
+        }
+    </script>
+}
+
+<div class="header-section">
+    <h1>Cadastro de Livros</h1>
+    <p>Bem-vindo(s) ao Sistema do CyberLibrary</p>
+</div>
+
+<div class="content">
+    <div class="search-bar">
+        <input type="text" placeholder="pesquisar">
+    </div>
+
+    <a asp-controller="Livros" asp-action="Adicionar" type="button" class="btn btn-primary btn-lg"> + Adicionar</a>
+</div>
+
+@if (TempData["MensagemSucesso"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["MensagemSucesso"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["MensagemErro"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["MensagemErro"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Capa</th>
+            <th scope="col">Título</th>
+            <th scope="col">Setor</th>
+            <th scope="col">Estante</th>
+            <th scope="col">Prateleira</th>
+            <th scope="col">Autor</th>
+            <th scope="col">Editora</th>
+            <th scope="col">Quant</th>
+            <th scope="col">Categoria</th>
+            <th scope="col">Disponível</th>
+            <th scope="col">Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            @foreach (Livro livro in Model)
+            {
+                <tr>
+                    <th scope="row">@livro.Id</th>
+                    <td>
+                        @if (livro.CapaImagem != null && livro.CapaImagem.Length > 0)
+                        {
+                            var base64 = Convert.ToBase64String(livro.CapaImagem);
+                            var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+
+                            <img src="@imgSrc" alt="Capa Livro" style="width: 30px; height: auto; object-fit: cover;">
+                        }
+                        else
+                        {
+                            <img src="/images/placeholder.png" alt="Sem Capa" style="width: 50px; height: auto; object-fit: cover;">
+                        }
+                    </td>
+                    <td>@livro.Titulo</td>
+                    <td>@livro.Setor</td>
+                    <td>@livro.Estante</td>
+                    <td>@livro.Prateleira</td>
+                    <td>@livro.Autor</td>
+                    <td>@livro.Editora</td>
+                    <td>@livro.Quantidade</td>
+                    <td>@livro.Categoria</td>
+                    <td>@(livro.Disponivel ? "Sim" : "Não")</td>
+                    <td>
+                        <a asp-controller="Livros" asp-action="Editar" asp-route-id="@livro.Id" class="btn btn-primary btn-sm"
+                            role="button">Editar</a>
+
+                        <button type="button" class="btn btn-danger btn-sm"
+                            onclick="confirmarExclusao(@livro.Id, '@livro.Titulo')">Excluir</button>
+
+                        <form id="formExcluir_@livro.Id" asp-controller="Livros" asp-action="Excluir" method="post"
+                            class="d-none">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@livro.Id" />
+                        </form>
+
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="12" class="text-center">Nenhum livro cadastrado.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="pagination">
+    <button class="pagination-button active">1</button>
+    <button class="pagination-button prev">Anterior</button>
+    <button class="pagination-button next">Próximo</button>
+</div>

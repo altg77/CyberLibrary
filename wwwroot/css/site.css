@@ -1,0 +1,344 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --primary-color: #9200e6;
+  --text-color: #333;
+  --light-text-color: #666;
+  --border-color: #eee;
+  --background-light: #f8f8f8;
+  --icon-color-default: #888;
+  --sidebar-width-collapsed: 80px;
+}
+
+.btn-primary {
+
+    --bs-btn-border-color: var(--primary-color); 
+    --bs-btn-hover-border-color: #000000; 
+    --bs-btn-active-border-color: #000000; 
+    --bs-btn-disabled-border-color: #000000; 
+}
+
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 60px;
+
+}
+
+.form-floating>.form-control-plaintext::placeholder,
+.form-floating>.form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating>.form-control-plaintext:focus::placeholder,
+.form-floating>.form-control:focus::placeholder {
+  text-align: start;
+}
+
+/*================= HEADER ====================*/
+
+.navbar {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
+  z-index: 1030;
+  background-color: #0a0a0a !important;
+  padding: 0 1rem;
+}
+
+.Rainor {
+  display: flex;
+}
+
+.logo-container img {
+  height: 70px;
+  width: auto;
+}
+
+.navbar .d-flex {
+  flex-grow: 1;
+  max-width: 400px;
+  margin: 0 20px;
+}
+
+
+.input-wrapper .form-control {
+  background-color: transparent;
+  border: none;
+  color: white;
+  box-shadow: none;
+}
+
+.input-wrapper .form-control::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.input-wrapper .btnn {
+  border: none;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrapper .btnn img {
+  height: 20px;
+  filter: invert(1);
+}
+
+.input-wrapper .btnn {
+  border: none;
+  background-color: var(--primary-color);
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-toggler {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.navbar-nav.ms-auto {
+  order: 3;
+  flex-grow: 0;
+}
+
+.navbar-nav .nav-item {
+  margin-right: 30px;
+}
+
+.navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-size: 1.1em;
+  padding: 0.2rem 0;
+  transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+  color: var(--primary-color);
+}
+
+.dropdown-menu {
+  background-color: rgb(14, 14, 14);
+  border: none;
+  color: white;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.dropdown-item {
+  padding: 8px 15px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dropdown-name {
+  font-size: 150%;
+  text-decoration: none;
+  padding: 8px 15px;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: var(--Cor_Primaria);
+  color: white;
+}
+
+.dropdown-divider {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.navbar-nav .nav-item .nav-link img {
+  border-radius: 50%;
+  height: 35px;
+  width: 35px;
+  object-fit: cover;
+  border: 2px solid white;
+  position: relative;
+  top: 0;
+  right: 0;
+}
+
+.user-profile {
+  position: relative;
+  display: inline-block;
+}
+
+.navbar-toggler {
+  margin-right: 5%;
+}
+
+a {
+  color: var(--Cor_Primaria);
+}
+
+.dropdown-menu li a {
+  color: white;
+}
+
+/*================= LEFT BAR ====================*/
+
+.sidebar {
+  width: var(--sidebar-width-collapsed);
+  background-color: #0a0a0a;
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 110px 20px;
+  transition: width 0.5s ease;
+  position: fixed;
+  top: 0;
+  height: 1000vh;
+  z-index: 100;
+}
+
+.sidebar:hover {
+  width: var(--sidebar-width-expanded);
+  align-items: flex-start;
+  padding: 110px 20px;
+}
+
+.sidebar-header {
+  margin-bottom: 30px;
+  width: 100%;
+  text-align: center;
+}
+
+.sidebar:hover .sidebar-header {
+  text-align: left;
+  padding-left: 10px;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+
+}
+
+.sidebar-nav li {
+  margin-bottom: 15px;
+}
+
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 10px;
+  color: #ffffff !important;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  justify-content: center;
+}
+
+.sidebar:hover .sidebar-nav a {
+  justify-content: flex-start;
+  padding: 10px 20px;
+}
+
+.sidebar-nav a i {
+  font-size: 1.3rem;
+  color: #ebebeb;
+  transition: margin-right 0.3s ease;
+}
+
+.sidebar:hover .sidebar-nav a i {
+  margin-right: 15px;
+}
+
+.sidebar-nav a span {
+  display: none;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.bardness {
+  border-bottom: 1px solid rgb(68, 68, 68);
+}
+
+.sidebar:hover .sidebar-nav a span {
+  display: inline-block;
+  opacity: 5;
+}
+
+.sidebar-nav a:hover,
+.sidebar-nav a.active {
+  background-color: rgb(20, 20, 20);
+}
+
+.sidebar-nav a:hover i {
+  color: var(--primary-color);
+}
+
+.sidebar-nav a.active {
+  font-weight: 500;
+}
+
+.sidebar-nav ul li.active {
+  background-color: rgba(0, 0, 0, 0.801);
+  border-radius: 5px;
+  position: relative;
+}
+
+.sidebar-nav ul li.active a {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.sidebar-nav ul li.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  background-color: var(--primary-color);
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.sidebar-nav ul li.active a i {
+  color: #ffffff;
+}
+
+.sidebar-nav ul li.active a:hover {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+/*================= MAIN ====================*/
+
+.content-wrapper {
+  display: flex;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #f5f5f5;
+  margin-left: var(--sidebar-width-collapsed);
+}

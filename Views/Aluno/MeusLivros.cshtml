@@ -1,0 +1,66 @@
+@{
+    ViewData["Title"] = "Meus Livros";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="/css/meusLivros.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="/js/Configures.js" asp-append-version="true"></script>
+}
+
+<div class="containercards">
+    <div class="head">
+        <h1>Meus Livros</h1>
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" placeholder="Buscar...">
+                <i class="fas fa-search"></i>
+            </div>
+            <div class="filter-dropdown">
+                <select>
+                    <option value="ativos">Ativos</option>
+                    <option value="lidos">Lidos</option>
+                    <option value="emprestados">Emprestados</option>
+                </select>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="book-grid">
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var emprestimo in Model)
+            {
+                <div class="book-card">
+                    <div class="book-cover-wrapper">
+                        <img src="@(emprestimo.Livro?.CapaUrl?? "https://via.placeholder.com/150")"
+                             alt="@(emprestimo.Livro?.Titulo ?? "Livro sem título") Cover" class="book-cover">
+                        <div class="book-options">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </div>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">@(emprestimo.Livro?.Titulo ?? "Livro sem título")</h3>
+                        <p class="book-author">@(emprestimo.Livro?.Autor ?? "Autor Desconhecido")</p>
+                        <div class="optionstwo">
+                            <form asp-action="EditarEmprestimo" method="get">
+                                <input type="hidden" name="id" value="@emprestimo.Id" />
+                                <button type="submit" class="btn-start">Devolver</button>
+                            </form>
+                            <button class="btn-start rond">Renovar</button>
+                        </div>
+                        <p class="book-status">Devolução Prevista: @emprestimo.DataDevolucaoPrevista.ToShortDateString()</p>
+                        <p class="book-status">Situação: @emprestimo.Situacao</p>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>Você não tem nenhum livro emprestado no momento.</p>
+        }
+    </div>
+</div>

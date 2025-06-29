@@ -1,0 +1,102 @@
+@model Livro
+@{
+    ViewData["Title"] = "Editar Livro";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="/css/repositorios.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="/js/Cadastro.js" asp-append-version="true"></script>
+}
+
+@{
+    string imgSrc = "/images/default-book-cover.png";
+    string currentSrc = "";
+    
+    if (Model.CapaImagem != null && Model.CapaImagem.Length > 0)
+    {
+        var base64 = Convert.ToBase64String(Model.CapaImagem);
+        imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+        currentSrc = imgSrc; // Store current image src for reset logic
+    }
+}
+
+<h3 class="mb-2">Editar Livro</h3>
+
+<form asp-controller="Livros" asp-action="Atualizar" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="card p-4 shadow-sm">
+        <div class="row g-3">
+            <div class="col-md-3 d-flex flex-column align-items-center">
+                <label for="capaAcervo" class="form-label text-muted">Capa do Livro</label>
+                <div class="capa-preview position-relative mb-3">
+                    <img id="previewCapa" src="@imgSrc"
+                        alt="Capa do Livro" class="img-fluid rounded shadow-sm" data-default-src="/images/default-book-cover.png"
+                        data-current-src="@currentSrc">
+
+                    <label for="uploadCapa"
+                        class="btn btn-primary btn-sm rounded-circle position-absolute bottom-0 start-50 translate-middle-x">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-camera-fill" viewBox="0 0 16 16">
+                            <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+                            <path
+                                d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a.5.5 0 0 1-.353-.146l-.853-.854A.5.5 0 0 0 10.5 2h-1a.5.5 0 0 0-.354.146L8.146 3.146A.5.5 0 0 1 7.854 3.146L6.646 2.146A.5.5 0 0 0 6 2h-1.5a.5.5 0 0 1-.354.146l-.853.854A.5.5 0 0 0 2.172 4H2zm6-2a.5.5 0 1 1 0 1 .5.5 0 0 1 0-1" />
+                        </svg>
+                        <input type="file" id="uploadCapa" name="capaArq" hidden accept="image/*">
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="mb-3">
+                    <label for="titulo" class="form-label">Titulo</label>
+                    <input type="text" asp-for="Titulo" class="form-control" placeholder="Nome do livro">
+                </div>
+
+                <div class="mb-3">
+                    <label for="autor" class="form-label">Autor</label>
+                    <input type="text" asp-for="Autor" class="form-control" placeholder="Autor da obra">
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="editora" class="form-label">Editora</label>
+                        <input type="text" asp-for="Editora" class="form-control" placeholder="Editora da obra">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="setor" class="form-label">Setor</label>
+                        <input type="text" asp-for="Setor" class="form-control">
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label for="quantidade" class="form-label">Quantidade</label>
+                        <input type="number" asp-for="Quantidade" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="estante" class="form-label">Estante</label>
+                        <input type="text" asp-for="Estante" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="prateleira" class="form-label">Prateleira</label>
+                        <input type="text" asp-for="Prateleira" class="form-control">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="sinopse" class="form-label">Sinopse</label>
+                    <textarea class="form-control" asp-for="Sinopse" rows="4"></textarea>
+                </div>
+
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    <a asp-controller="Livro" asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

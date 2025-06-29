@@ -1,0 +1,57 @@
+.capa-preview {
+    width: 200px;
+    height: auto;
+}
+
+.capa-preview img {
+    border: 1px solid #dee2e6;
+}
+
+.capa-preview .btn {
+    bottom: -15px !important;
+}
+
+.me-2 {
+    color: var(--primary-color) !important;
+}
+
+.me-2:hover {
+    color: rgb(255, 255, 255) !important;
+    background-color: var(--primary-color) !important;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+.form-control[readonly] {
+    background-color: #e9ecef;
+    opacity: 1;
+}
+
+.col-md-6.d-flex.align-items-end .form-label {
+    white-space: nowrap;
+}
+
+.card {
+    border: none;
+}
+
+.translate-middle-x {
+    background-color: var(--primary-color) !important;
+}
+
+.btn-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.mt-4 {
+    gap: 5px;
+}
+
+.mb-2 {
+    margin-bottom: 2% !important;
+    padding: 10px;
+    border-left: 5px solid var(--primary-color);
+}

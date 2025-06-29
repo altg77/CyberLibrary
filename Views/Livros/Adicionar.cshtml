@@ -1,0 +1,128 @@
+@model Livro
+@{
+    ViewData["Title"] = "Cadastro de Livros";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="/css/repositorios.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="/js/Cadastro.js" asp-append-version="true"></script>
+}
+
+<h3 class="mb-2">Cadastro novo livro</h3>
+
+<form asp-controller="Livros" asp-action="Adicionar" method="post" enctype="multipart/form-data">
+    <div class="card p-4 shadow-sm">
+        <div class="row g-3">
+            <div class="col-md-3 d-flex flex-column align-items-center">
+                <label for="capaAcervo" class="form-label text-muted">Capa do Livro</label>
+                <div class="capa-preview position-relative mb-3">
+                    <img id="previewCapa" src="/images/default-book-cover.png" alt="Capa do Livro"
+                        class="img-fluid rounded shadow-sm" data-default-src="/images/default-book-cover.png">
+                    <label for="uploadCapa"
+                        class="btn btn-primary btn-sm rounded-circle position-absolute bottom-0 start-50 translate-middle-x">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-camera-fill" viewBox="0 0 16 16">
+                            <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+                            <path
+                                d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a.5.5 0 0 1-.353-.146l-.853-.854A.5.5 0 0 0 10.5 2h-1a.5.5 0 0 0-.354.146L8.146 3.146A.5.5 0 0 1 7.854 3.146L6.646 2.146A.5.5 0 0 0 6 2h-1.5a.5.5 0 0 1-.354.146l-.853.854A.5.5 0 0 0 2.172 4H2zm6-2a.5.5 0 1 1 0 1 .5.5 0 0 1 0-1" />
+                        </svg>
+                        <input type="file" id="uploadCapa" name="capaArq" hidden accept="image/*">
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="isbn" class="form-label">Pesquisar em:</label>
+                        <input type="text" class="form-control" id="isbnInput"
+                            placeholder="Puxe os dados atraves da API">
+                    </div>
+                    <div class="col-md-6 d-flex align-items-end">
+                        <button type="button" id="googleBooksSearchBtn"
+                            class="btn btn-outline-primary btn-sm me-2">GoogleBooks</button>
+                        <button type="button" id="openLibrarySearchBtn"
+                            class="btn btn-outline-secondary btn-sm">OpenLibrary</button>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="titulo" class="form-label">Titulo</label>
+                    <input type="text" asp-for="Titulo" id="titulo" class="form-control" placeholder="Nome do livro">
+                </div>
+
+                <div class="mb-3">
+                    <label for="autor" class="form-label">Autor</label>
+                    <input type="text" asp-for="Autor" id="autor" class="form-control" placeholder="Autor da obra">
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="editora" class="form-label">Editora</label>
+                        <input type="text" asp-for="Editora" id="editora" class="form-control"
+                            placeholder="Editora da obra">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="setor" class="form-label">Setor</label>
+                        <input type="text" asp-for="Setor" id="setor" class="form-control" value="Setor">
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="categoria" class="form-label">Categoria</label>
+                        <select class="form-select" asp-for="Categoria" id="categoria">
+                            <option value="">Selecione...</option>
+                            <option value="Literatura Clássica">Literatura Clássica</option>
+                            <option value="Romance">Romance</option>
+                            <option value="Ficção Científica">Ficção Científica</option>
+                            <option value="História">História</option>
+                            <option value="Tecnologia">Tecnologia</option>
+                            <option value="Fantasia">Fantasia</option>
+                            <option value="Biografia">Biografia</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="formato" class="form-label">Formato</label>
+                        <select class="form-select" asp-for="Formato" id="formato">
+                            <option value="">Selecione...</option>
+                            <option value="Capa Dura">Capa Dura</option>
+                            <option value="Brochura">Brochura</option>
+                            <option value="Digital (e-book)">Digital (e-book)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label for="quantidade" class="form-label">Quantidade</label>
+                        <input type="number" asp-for="Quantidade" id="quantidade" class="form-control" value="1">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="estante" class="form-label">Estante</label>
+                        <input type="text" asp-for="Estante" id="estante" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="prateleira" class="form-label">Prateleira</label>
+                        <input type="text" asp-for="Prateleira" id="prateleira" class="form-control">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="sinopse" class="form-label">Sinopse</label>
+                    <textarea class="form-control" asp-for="Sinopse" id="sinopse" rows="4"></textarea>
+                </div>
+
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                    <button type="reset" class="btn btn-secondary" id="resetButton">Limpar</button>
+                    <a asp-controller="Livros" asp-action="Index" type="buttom" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
