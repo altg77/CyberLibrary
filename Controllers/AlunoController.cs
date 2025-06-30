@@ -60,7 +60,7 @@ public class AlunoController : Controller
         viewModel.ExploreBooks = GetRandomBooks(); 
         viewModel.MostBorrowedBooks = GetMostBorrowedBooks();
         viewModel.TopRatedBooks = GetTopRatedBooks();
-        viewModel.Mangas = GetBooksBySector("Manga");
+        viewModel.Mangas = GetBooksBySector("Mangas");
         viewModel.MachadoDeAssisBooks = GetBooksByAuthor("Machado de Assis");
 
         return View(viewModel);
@@ -159,7 +159,23 @@ public class AlunoController : Controller
 
     public IActionResult MeusLivros()
     {
-        return View();
+        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userIdString))
+        {
+            TempData["MensagemErro"] = "Usuário não autenticado.";
+            return RedirectToAction("Login", "Usuarios"); 
+        }
+
+        if (!int.TryParse(userIdString, out int currentUserId))
+        {
+            TempData["MensagemErro"] = "Erro ao identificar o usuário logado.";
+            return RedirectToAction("Login", "Usuarios");
+        }
+
+        List<Emprestimo> meusEmprestimos = _emprestimoRep.ListarEmprestimosPorUsuario(currentUserId);
+
+        return View(meusEmprestimos);
     }
 
     public IActionResult Notificacoes()

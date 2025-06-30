@@ -1,5 +1,3 @@
-
-
 .head {
     display: flex;
     justify-content: space-between;
@@ -200,6 +198,25 @@
 
 .btn-start:hover {
     background-color: rgb(51, 51, 51);
+}
+
+
+.book-status {
+    font-size: 14px;
+    color: var(--light-text); /* Uma cor de texto mais clara para informações secundárias */
+    margin-top: 10px; /* Espaço acima do parágrafo */
+    margin-bottom: 5px; /* Espaço abaixo do parágrafo */
+}
+
+.book-status.overdue {
+    color: var(--danger-color, #dc3545); /* Uma cor de alerta, como vermelho */
+    font-weight: bold;
+}
+
+.book-status.returned,
+.book-status.read {
+    color: var(--success-color, #28a745); /* Uma cor de sucesso, como verde */
+    font-weight: 500;
 }
 
 

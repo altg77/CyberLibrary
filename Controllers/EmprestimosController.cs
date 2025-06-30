@@ -8,8 +8,8 @@ namespace CyberLibrary2.Controllers
     public class EmprestimosController : Controller
     {
         private readonly IEmprestimoR _emprestimoRepository;
-        private readonly ILivroR _livroRepository; 
-        private readonly IUsuarioR _usuarioRepository; 
+        private readonly ILivroR _livroRepository;
+        private readonly IUsuarioR _usuarioRepository;
 
         public EmprestimosController(IEmprestimoR emprestimoRepository, ILivroR livroRepository, IUsuarioR usuarioRepository)
         {
@@ -41,7 +41,7 @@ namespace CyberLibrary2.Controllers
         {
             ModelState.Remove("Livro");
             ModelState.Remove("Usuario");
-            ModelState.Remove("Devolvido"); 
+            ModelState.Remove("Devolvido");
 
             if (ModelState.IsValid)
             {
@@ -77,7 +77,7 @@ namespace CyberLibrary2.Controllers
             var availableBooks = _livroRepository.listarLivros()
                                                     .Where(l => l.QuantidadeDisponivel > 0 || l.Id == emprestimo.LivroId)
                                                     .ToList();
-            
+
             // Filter out users with "bibliotecario" role
             var usuariosDisponiveis = _usuarioRepository.ListarUsuarios()
                                                     .Where(u => u.Cargo != "bibliotecario")
@@ -112,7 +112,7 @@ namespace CyberLibrary2.Controllers
             var availableBooks = _livroRepository.listarLivros()
                                                     .Where(l => l.QuantidadeDisponivel > 0 || l.Id == emprestimo.LivroId)
                                                     .ToList();
-            
+
             // Filter out users with "bibliotecario" role for redisplay as well
             var usuariosDisponiveis = _usuarioRepository.ListarUsuarios()
                                                     .Where(u => u.Cargo != "bibliotecario")
@@ -170,7 +170,19 @@ namespace CyberLibrary2.Controllers
             {
                 TempData["MensagemErro"] = $"Erro ao registrar devolução: {ex.Message}";
             }
-            return RedirectToAction(nameof(Index));
+
+            if (User.IsInRole("Aluno"))
+            {
+                return RedirectToAction("MeusLivros", "Aluno");
+            }
+            else if (User.IsInRole("Bibliotecario"))
+            {
+                return RedirectToAction("Index", "Emprestimos");
+            }
+            else
+            {
+                return RedirectToAction("Login", "Usuarios"); 
+            }
         }
     }
 }

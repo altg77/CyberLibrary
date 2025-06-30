@@ -1,3 +1,5 @@
+@model List<Emprestimo>
+
 @{
     ViewData["Title"] = "Meus Livros";
 }
@@ -7,7 +9,70 @@
 }
 
 @section Scripts {
-    <script src="/js/Configures.js" asp-append-version="true"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const filterDropdown = document.querySelector('.filter-dropdown select');
+            if (filterDropdown) {
+                filterDropdown.addEventListener('change', function () {
+                    const selectedFilter = this.value;
+                    console.log('Filtro selecionado:', selectedFilter);
+                });
+            }
+
+            // Get all devolution forms
+            const devolutionForms = document.querySelectorAll('.devolution-form');
+
+            devolutionForms.forEach(form => {
+                form.addEventListener('submit', function (event) {
+                    event.preventDefault(); // Prevent default form submission
+
+                    if (confirm('Tem certeza que deseja devolver este livro?')) {
+                        const form = event.target;
+                        const submitButton = form.querySelector('button[type="submit"]');
+                        const emprestimoId = form.querySelector('input[name="id"]').value;
+
+                        // Optionally, disable the button immediately to prevent multiple clicks
+                        submitButton.disabled = true;
+                        submitButton.textContent = 'Devolvendo...';
+
+                        fetch(form.action, {
+                            method: form.method,
+                            body: new FormData(form) // Send form data
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                return response.text(); // Or response.json() if your controller returns JSON
+                            }
+                            throw new Error('Erro ao devolver o livro.');
+                        })
+                        .then(data => {
+                            // Find the parent book-card
+                            const bookCard = form.closest('.book-card');
+                            if (bookCard) {
+                                // Remove only the 'Devolver' button's form
+                                form.remove(); 
+                                
+                                // Update the book status if desired
+                                const bookStatusElement = bookCard.querySelector('.book-status');
+                                if (bookStatusElement) {
+                                    bookStatusElement.textContent = 'Status: Devolvido'; // Example update
+                                }
+                                // The "Renovar" button will remain because it's not part of this form.
+                            }
+                            console.log('Livro devolvido com sucesso:', data);
+                            alert('Livro devolvido com sucesso!'); // User feedback
+                        })
+                        .catch(error => {
+                            console.error('Erro:', error);
+                            alert('Erro ao devolver o livro: ' + error.message); // User feedback
+                            submitButton.disabled = false; // Re-enable button on error
+                            submitButton.textContent = 'Devolver';
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 }
 
 <div class="head">
@@ -35,8 +100,11 @@
         {
             <div class="book-card">
                 <div class="book-cover-wrapper">
-                    <img src="@(emprestimo.Livro?.CapaUrl ?? "https://via.placeholder.com/150")"
-                        alt="@(emprestimo.Livro?.Titulo ?? "Livro sem título") Cover" class="book-cover">
+                    <img src="@(emprestimo.Livro?.CapaImagem != null
+                                          ? $"data:image/jpeg;base64,{Convert.ToBase64String(emprestimo.Livro.CapaImagem)}"
+                                          : "/images/default-book-cover.png")"
+                         alt="@(emprestimo.Livro?.Titulo ?? "Livro sem título") Cover"
+                         class="book-cover">
                     <div class="book-options">
                         <i class="fas fa-ellipsis-v"></i>
                     </div>
@@ -45,14 +113,15 @@
                     <h3 class="book-title">@(emprestimo.Livro?.Titulo ?? "Livro sem título")</h3>
                     <p class="book-author">@(emprestimo.Livro?.Autor ?? "Autor Desconhecido")</p>
                     <div class="optionstwo">
-                        <form asp-action="EditarEmprestimo" method="get">
+                        <form asp-controller="Emprestimos" asp-action="RegistrarDevolucao" method="post"
+                              class="devolution-form"> @* Added class here *@
                             <input type="hidden" name="id" value="@emprestimo.Id" />
                             <button type="submit" class="btn-start">Devolver</button>
                         </form>
                         <button class="btn-start rond">Renovar</button>
                     </div>
-                    <p class="book-status">Devolução Prevista: @emprestimo.DataDevolucaoPrevista.ToShortDateString()</p>
-                    <p class="book-status">Situação: @emprestimo.Situacao</p>
+                    <p class="book-status">Devolução Prevista: @(emprestimo.DataDevolucaoPrevista != DateTime.MinValue ?
+                                             emprestimo.DataDevolucaoPrevista.ToShortDateString() : "N/A")</p>
                 </div>
             </div>
         }
