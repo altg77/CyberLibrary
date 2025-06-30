@@ -26,8 +26,12 @@ namespace CyberLibrary2.Controllers
 
         public IActionResult Adicionar()
         {
+            var usuariosDisponiveis = _usuarioRepository.ListarUsuarios()
+                                                    .Where(u => u.Cargo != "bibliotecario")
+                                                    .ToList();
+
             ViewBag.Livros = new SelectList(_livroRepository.listarLivros().Where(l => l.QuantidadeDisponivel > 0), "Id", "Titulo");
-            ViewBag.Usuarios = new SelectList(_usuarioRepository.ListarUsuarios(), "Id", "Nome");
+            ViewBag.Usuarios = new SelectList(usuariosDisponiveis, "Id", "Nome");
             return View();
         }
 
@@ -53,9 +57,12 @@ namespace CyberLibrary2.Controllers
                 }
             }
 
-            // If we got this far, something failed, redisplay form
+            var usuariosDisponiveis = _usuarioRepository.ListarUsuarios()
+                                                    .Where(u => u.Cargo != "bibliotecario")
+                                                    .ToList();
+
             ViewBag.Livros = new SelectList(_livroRepository.listarLivros().Where(l => l.QuantidadeDisponivel > 0), "Id", "Titulo", emprestimo.LivroId);
-            ViewBag.Usuarios = new SelectList(_usuarioRepository.ListarUsuarios(), "Id", "Nome", emprestimo.UsuarioId);
+            ViewBag.Usuarios = new SelectList(usuariosDisponiveis, "Id", "Nome", emprestimo.UsuarioId);
             return View(emprestimo);
         }
 
@@ -68,11 +75,16 @@ namespace CyberLibrary2.Controllers
             }
 
             var availableBooks = _livroRepository.listarLivros()
-                                                  .Where(l => l.QuantidadeDisponivel > 0 || l.Id == emprestimo.LivroId)
-                                                  .ToList();
+                                                    .Where(l => l.QuantidadeDisponivel > 0 || l.Id == emprestimo.LivroId)
+                                                    .ToList();
+            
+            // Filter out users with "bibliotecario" role
+            var usuariosDisponiveis = _usuarioRepository.ListarUsuarios()
+                                                    .Where(u => u.Cargo != "bibliotecario")
+                                                    .ToList();
 
             ViewBag.Livros = new SelectList(availableBooks, "Id", "Titulo", emprestimo.LivroId);
-            ViewBag.Usuarios = new SelectList(_usuarioRepository.ListarUsuarios(), "Id", "Nome", emprestimo.UsuarioId);
+            ViewBag.Usuarios = new SelectList(usuariosDisponiveis, "Id", "Nome", emprestimo.UsuarioId);
             return View(emprestimo);
         }
 
@@ -98,10 +110,16 @@ namespace CyberLibrary2.Controllers
             }
 
             var availableBooks = _livroRepository.listarLivros()
-                                                  .Where(l => l.QuantidadeDisponivel > 0 || l.Id == emprestimo.LivroId)
-                                                  .ToList();
+                                                    .Where(l => l.QuantidadeDisponivel > 0 || l.Id == emprestimo.LivroId)
+                                                    .ToList();
+            
+            // Filter out users with "bibliotecario" role for redisplay as well
+            var usuariosDisponiveis = _usuarioRepository.ListarUsuarios()
+                                                    .Where(u => u.Cargo != "bibliotecario")
+                                                    .ToList();
+
             ViewBag.Livros = new SelectList(availableBooks, "Id", "Titulo", emprestimo.LivroId);
-            ViewBag.Usuarios = new SelectList(_usuarioRepository.ListarUsuarios(), "Id", "Nome", emprestimo.UsuarioId);
+            ViewBag.Usuarios = new SelectList(usuariosDisponiveis, "Id", "Nome", emprestimo.UsuarioId);
             return View("Editar", emprestimo);
         }
 
