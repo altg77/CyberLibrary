@@ -37,27 +37,41 @@ public class LivrosController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Adicionar(Livro livro, IFormFile capaArq)
-    {
-        if (ModelState.IsValid)
+     [HttpPost]
+        public async Task<IActionResult> Adicionar(Livro livro, IFormFile capaArq)
         {
-            if (capaArq != null && capaArq.Length > 0)
+            if (ModelState.IsValid)
             {
-                using (var memoryStream = new MemoryStream())
+                if (capaArq != null && capaArq.Length > 0)
                 {
-                    await capaArq.CopyToAsync(memoryStream);
-                    livro.CapaImagem = memoryStream.ToArray();
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await capaArq.CopyToAsync(memoryStream);
+                        livro.CapaImagem = memoryStream.ToArray();
+                    }
                 }
+     
+                if (livro.Quantidade > 0)
+                {
+                    livro.QuantidadeDisponivel = livro.Quantidade;
+                }
+                else
+                {
+                    livro.QuantidadeDisponivel = 0; 
+                }
+
+                livro_rep.adicionar(livro);
+
+                TempData["MensagemSucesso"] = "Livro cadastrado com sucesso!";
+
+                return RedirectToAction("Index");
             }
 
-            livro_rep.adicionar(livro);
-            return RedirectToAction("Index");
-        }
 
-        ViewBag.SetoresDisponiveis = _setorRep.ListarSetores();
-        ViewBag.CategoriasDisponiveis = _categoriaRep.ListarCategorias();
-        return View(livro);
-    }
+            ViewBag.CategoriasDisponiveis = _categoriaRep.ListarCategorias();
+            ViewBag.SetoresDisponiveis = _setorRep.ListarSetores();
+            return View(livro); 
+        }
 
     public IActionResult Editar(int id)
     {

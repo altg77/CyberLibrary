@@ -9,6 +9,7 @@
 
 @section Scripts {
     <script src="/js/Cadastro.js" asp-append-version="true"></script>
+    <script src="/js/Api.js" asp-append-version="true"></script>
 }
 
 <h3 class="mb-2">Cadastro novo livro</h3>
@@ -37,20 +38,20 @@
             <div class="col-md-9">
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
-                        <label for="isbn" class="form-label">Pesquisar em:</label>
+                        <label for="isbnInput" class="form-label">Pesquisar por ISBN / Termo:</label>
                         <input type="text" class="form-control" id="isbnInput"
-                            placeholder="Puxe os dados atraves da API">
+                            placeholder="ISBN ou Título/Autor para pesquisa">
                     </div>
                     <div class="col-md-6 d-flex align-items-end">
                         <button type="button" id="googleBooksSearchBtn"
-                            class="btn btn-outline-primary btn-sm me-2">GoogleBooks</button>
+                            class="btn btn-outline-primary btn-sm me-2">Pesquisar por ISBN</button>
                         <button type="button" id="openLibrarySearchBtn"
-                            class="btn btn-outline-secondary btn-sm">OpenLibrary</button>
+                            class="btn btn-outline-secondary btn-sm">Pesquisar por Termo</button>
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label for="titulo" class="form-label">Titulo</label>
+                    <label for="titulo" class="form-label">Título</label>
                     <input type="text" asp-for="Titulo" id="titulo" class="form-control" placeholder="Nome do livro">
                 </div>
 
@@ -86,7 +87,7 @@
                         <label for="setor" class="form-label">Setor</label>
                         <select class="form-select" asp-for="Setor" id="setor">
                             <option value="">Selecione...</option>
-                            @if (ViewBag.CategoriasDisponiveis != null)
+                            @if (ViewBag.SetoresDisponiveis != null) // Propriedade ViewBag corrigida
                             {
                                 foreach (var setor in ViewBag.SetoresDisponiveis)
                                 {
@@ -120,7 +121,7 @@
                 <div class="d-flex justify-content-end mt-4">
                     <button type="submit" class="btn btn-primary">Salvar</button>
                     <button type="reset" class="btn btn-secondary" id="resetButton">Limpar</button>
-                    <a asp-controller="Livros" asp-action="Index" type="buttom" class="btn btn-secondary">Cancelar</a>
+                    <a asp-controller="Livros" asp-action="Index" class="btn btn-secondary">Cancelar</a>
                 </div>
             </div>
         </div>
