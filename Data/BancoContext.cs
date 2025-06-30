@@ -11,7 +11,7 @@ namespace CyberLibrary2.Data
         public DbSet<Livro> Livros { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
-        public DbSet<Turma> Turmas { get; set; }
+        public DbSet<Setor> Setores { get; set; }
         public DbSet<Emprestimo> Emprestimos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

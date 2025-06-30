@@ -80,20 +80,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGl2cm9zXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[E:/Tiago/Documents/CyberLibrary2/Views/Setores/Adicionar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2V0b3Jlc1xBZGljaW9uYXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Tiago/Documents/CyberLibrary2/Views/Setores/Editar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2V0b3Jlc1xFZGl0YXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Tiago/Documents/CyberLibrary2/Views/Setores/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2V0b3Jlc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [E:/Tiago/Documents/CyberLibrary2/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/Tiago/Documents/CyberLibrary2/Views/Turmas/Adicionar.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHVybWFzXEFkaWNpb25hci5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/Tiago/Documents/CyberLibrary2/Views/Turmas/Editar.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHVybWFzXEVkaXRhci5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/Tiago/Documents/CyberLibrary2/Views/Turmas/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHVybWFzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/Tiago/Documents/CyberLibrary2/Views/Usuarios/Adicionar.cshtml]

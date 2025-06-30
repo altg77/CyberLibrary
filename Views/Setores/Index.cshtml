@@ -1,7 +1,7 @@
-@model List<Turma>
+@model List<Setor>
 
 @{
-    ViewData["Title"] = "Turmas";
+    ViewData["Title"] = "Setores";
 }
 
 @section Styles {
@@ -11,17 +11,18 @@
 @section Scripts {
     <script>
         function confirmarExclusao(id, nome) {
-            if (confirm(`Tem certeza que deseja excluir a turma "${nome}" (ID: ${id})? Esta ação é irreversível!`)) {
+            if (confirm(`Tem certeza que deseja excluir a setor "${nome}" (ID: ${id})? Esta ação é irreversível!`)) {
                 document.getElementById(`formExcluir_${id}`).submit();
             }
         }
     </script>
+    <script src="/js/paginations.js" asp-append-version="true"></script>
 }
 
 
 <div class="header-section">
-    <h1>Cadastro de Turmas</h1>
-    <p>Gerencie as turmas do CyberLibrary</p>
+    <h1>Cadastro de Setores</h1>
+    <p>Gerencie as setores do CyberLibrary</p>
 </div>
 
 <div class="content">
@@ -29,7 +30,7 @@
         <input type="text" placeholder="pesquisar">
     </div>
 
-    <a asp-controller="Turmas" asp-action="Adicionar" type="button" class="btn btn-primary btn-lg"> + Adicionar </a>
+    <a asp-controller="Setores" asp-action="Adicionar" type="button" class="btn btn-primary btn-lg"> + Adicionar </a>
 </div>
 
 @if (TempData["MensagemSucesso"] != null)
@@ -51,33 +52,31 @@
     <thead>
         <tr>
             <th scope="col">#</th>
-            <th scope="col">Nome da Turma</th>
+            <th scope="col">Nome do Setor</th>
             <th scope="col">Descrição</th>
-            <th scope="col">Ano/Período</th>
             <th scope="col"></th>
         </tr>
     </thead>
     <tbody>
         @if (Model != null && Model.Any())
         {
-            @foreach (Turma turma in Model)
+            @foreach (Setor setor in Model)
             {
                 <tr>
-                    <th scope="row">@turma.Id</th>
-                    <td>@turma.Nome</td>
-                    <td>@turma.Descricao</td>
-                    <td>@turma.AnoPeriodo</td>
+                    <th scope="row">@setor.Id</th>
+                    <td>@setor.Nome</td>
+                    <td>@setor.Descricao</td>
                     <td>
-                        <a asp-controller="Turmas" asp-action="Editar" asp-route-id="@turma.Id" class="btn btn-primary btn-sm"
+                        <a asp-controller="Turmas" asp-action="Editar" asp-route-id="@setor.Id" class="btn btn-primary btn-sm"
                             role="button">Editar</a>
 
                         <button type="button" class="btn btn-danger btn-sm"
-                            onclick="confirmarExclusao(@turma.Id, '@turma.Nome')">Excluir</button>
+                            onclick="confirmarExclusao(@setor.Id, '@setor.Nome')">Excluir</button>
 
-                        <form id="formExcluir_@turma.Id" asp-controller="Turmas" asp-action="Excluir" method="post"
+                        <form id="formExcluir_@setor.Id" asp-controller="Setores" asp-action="Excluir" method="post"
                             class="d-none">
                             @Html.AntiForgeryToken()
-                            <input type="hidden" name="id" value="@turma.Id" />
+                            <input type="hidden" name="id" value="@setor.Id" />
                         </form>
                     </td>
                 </tr>
@@ -86,7 +85,7 @@
         else
         {
             <tr>
-                <td colspan="8" class="text-center">Nenhuma turma cadastrada.</td>
+                <td colspan="8" class="text-center">Nenhum setor cadastrado.</td>
             </tr>
         }
     </tbody>

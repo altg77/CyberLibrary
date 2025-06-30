@@ -86,8 +86,13 @@
                         <label for="setor" class="form-label">Setor</label>
                         <select class="form-select" asp-for="Setor" id="setor">
                             <option value="">Selecione...</option>
-                            <option value="Literatura Clássica">Literatura Clássica</option>
-                            <option value="Outro">Outro</option>
+                            @if (ViewBag.CategoriasDisponiveis != null)
+                            {
+                                foreach (var setor in ViewBag.SetoresDisponiveis)
+                                {
+                                    <option value="@setor.Nome">@setor.Nome</option>
+                                }
+                            }
                         </select>
                     </div>
                 </div>

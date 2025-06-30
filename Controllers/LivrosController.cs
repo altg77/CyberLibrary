@@ -12,11 +12,14 @@ public class LivrosController : Controller
 {
     private readonly ILivroR livro_rep;
     private readonly ICategoriaR _categoriaRep;
+    private readonly ISetorR _setorRep;
 
-    public LivrosController(ILivroR livroRep, ICategoriaR categoriaRep)
+
+    public LivrosController(ILivroR livroRep, ICategoriaR categoriaRep, ISetorR setorRep)
     {
         livro_rep = livroRep;
         _categoriaRep = categoriaRep;
+        _setorRep = setorRep;
     }
 
     [Authorize]
@@ -29,6 +32,7 @@ public class LivrosController : Controller
     public IActionResult Adicionar()
     {
         ViewBag.CategoriasDisponiveis = _categoriaRep.ListarCategorias();
+        ViewBag.SetoresDisponiveis = _setorRep.ListarSetores();
         return View();
     }
 
@@ -50,6 +54,7 @@ public class LivrosController : Controller
             return RedirectToAction("Index");
         }
 
+        ViewBag.SetoresDisponiveis = _setorRep.ListarSetores();
         ViewBag.CategoriasDisponiveis = _categoriaRep.ListarCategorias();
         return View(livro);
     }

@@ -121,7 +121,12 @@ public class UsuariosController : Controller
     public IActionResult Index()
     {
         List<Usuario> usuarios = _usuarioRep.ListarUsuarios();
-        return View(usuarios);
+
+         List<Usuario> usuariosFiltrados = usuarios
+                                            .Where(u => u.Cargo != "Bibliotecario")
+                                            .ToList();
+
+        return View(usuariosFiltrados); 
     }
 
     public IActionResult Adicionar()
@@ -143,7 +148,6 @@ public class UsuariosController : Controller
     [HttpPost]
     public async Task<ActionResult> Atualizar(Usuario usuario, IFormFile? ImagemArq, string? NovaSenha, string? ConfirmarSenha)
     {
-        // Recupere o usuário existente do banco de dados para reter a senha e a imagem atuais, se não forem atualizadas
         var existingUsuario = _usuarioRep.BuscarId(usuario.Id);
         if (existingUsuario == null)
         {

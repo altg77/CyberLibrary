@@ -1,5 +1,6 @@
 using CyberLibrary2.Contratos;
 using CyberLibrary2.Data;
+using CyberLibrary2.Models;
 using CyberLibrary2.repository;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,7 @@ builder.Services.AddDbContext<BancoContext>(opt =>
 //Injections do Repositorio e Contrato
 builder.Services.AddScoped<ILivroR, LivroR>();
 builder.Services.AddScoped<IUsuarioR, UsuarioR>();
-builder.Services.AddScoped<ITurmaR, TurmaR>();
+builder.Services.AddScoped<ISetorR, SetorR>();
 builder.Services.AddScoped<ICategoriaR, CategoriaR>();
 builder.Services.AddScoped<IEmprestimoR, EmprestimoR>();
 
@@ -36,8 +37,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("RequireLoggedIn", policy => policy.RequireAuthenticatedUser());
-    // Example: For roles
-    // options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+
 });
 
 builder.Services.AddControllersWithViews();
