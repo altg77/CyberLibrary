@@ -9,7 +9,6 @@ using CyberLibrary2.Models.ViewModel;
 
 namespace CyberLibrary2.Controllers;
 
-[Authorize]
 public class AlunoController : Controller
 {
     private readonly ILivroR _livroRep;

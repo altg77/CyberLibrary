@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CyberLibrary2.Migrations
 {
     [DbContext(typeof(BancoContext))]
-    [Migration("20250629174450_Emprestimo")]
-    partial class Emprestimo
+    [Migration("20250630151701_Sl")]
+    partial class Sl
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,7 +56,7 @@ namespace CyberLibrary2.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("DataDevolucaoPrevista")
+                    b.Property<DateTime>("DataDevolucaoPrevista")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("DataDevolucaoReal")
@@ -110,9 +110,6 @@ namespace CyberLibrary2.Migrations
                     b.Property<string>("Estante")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Formato")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Prateleira")
                         .HasColumnType("longtext");
 
@@ -137,16 +134,13 @@ namespace CyberLibrary2.Migrations
                     b.ToTable("Livros");
                 });
 
-            modelBuilder.Entity("CyberLibrary2.Models.Turma", b =>
+            modelBuilder.Entity("CyberLibrary2.Models.Setor", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AnoPeriodo")
-                        .HasColumnType("int");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
@@ -160,7 +154,7 @@ namespace CyberLibrary2.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Turmas");
+                    b.ToTable("Setores");
                 });
 
             modelBuilder.Entity("CyberLibrary2.Models.Usuario", b =>

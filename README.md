@@ -39,6 +39,10 @@ Siga os passos abaixo para configurar e executar o Cyber Library em seu ambiente
 2.  **Aplique as migrações**: Navegue até o diretório raiz do projeto no seu terminal e execute o seguinte comando para aplicar as migrações do Entity Framework Core e criar o esquema do banco de dados:
 
     ```bash
+    dotnet ef migrations add
+    ```
+
+    ```bash
     dotnet ef database update
     ```
 

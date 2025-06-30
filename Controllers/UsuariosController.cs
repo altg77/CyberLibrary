@@ -122,11 +122,11 @@ public class UsuariosController : Controller
     {
         List<Usuario> usuarios = _usuarioRep.ListarUsuarios();
 
-         List<Usuario> usuariosFiltrados = usuarios
-                                            .Where(u => u.Cargo != "Bibliotecario")
-                                            .ToList();
+        List<Usuario> usuariosFiltrados = usuarios
+                                           .Where(u => u.Cargo != "Bibliotecario")
+                                           .ToList();
 
-        return View(usuariosFiltrados); 
+        return View(usuariosFiltrados);
     }
 
     public IActionResult Adicionar()
