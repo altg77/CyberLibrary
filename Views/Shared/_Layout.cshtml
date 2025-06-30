@@ -6,6 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] | CyberLibrary</title>
+    <link rel="shortcut icon" href="/img/Favicon.png" type="image/x-icon">
 
     @await RenderSectionAsync("Styles", required: false)
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -19,6 +20,10 @@
 </head>
 
 <body>
+    @{
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+        var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+    }
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-0">
             <div class="container-fluid">
@@ -30,13 +35,16 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         var profilePictureBase64 = User.FindFirst("ProfilePicture")?.Value;
-                    var profilePictureSrc = string.IsNullOrEmpty(profilePictureBase64) ? "https://w7.pngwing.com/pngs/1000/665/png-transparent-computer-icons-profile-s-free-angle-sphere-profile-cliparts-free.png" :
-                    $"data:image/jpeg;base64,{profilePictureBase64}";
+                        var profilePictureSrc = string.IsNullOrEmpty(profilePictureBase64) ?
+                        "https://w7.pngwing.com/pngs/1000/665/png-transparent-computer-icons-profile-s-free-angle-sphere-profile-cliparts-free.png"
+                        :
+                        $"data:image/jpeg;base64,{profilePictureBase64}";
 
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                                <img src="@profilePictureSrc" alt="Foto de Perfil" class="rounded-circle" style="width: 40px; height: 40px;">
+                                <img src="@profilePictureSrc" alt="Foto de Perfil" class="rounded-circle"
+                                    style="width: 40px; height: 40px;">
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-name">@User.Identity.Name</a></li>
@@ -77,12 +85,13 @@
                     <nav class="sidebar-nav">
                         <ul>
                             <li>
-                                <a asp-controller="Bibliotecario" asp-action="Index"><i
-                                        class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+                            <li class="@(currentController == "Bibliotecario" && currentAction == "Index" ? "active" : "")">
+                                <a asp-controller="Bibliotecario" asp-action="Index"><i class="fas fa-tachometer-alt"></i>
+                                    <span>Dashboard</span></a>
                             </li>
-                            <li>
-                                <a asp-controller="Emprestimos" asp-action="Index"><i
-                                        class="fas fa-handshake"></i><span>Empréstimos</span></a>
+                            <li class="@(currentController == "Emprestimos" && currentAction == "Index" ? "active" : "")">
+                                <a asp-controller="Emprestimos" asp-action="Index"><i class="fas fa-handshake"></i>
+                                    <span>Empréstimos</span></a>
                             </li>
                             <li>
                                 <a href="#"><i class="fas fa-file-alt"></i> <span>Relatórios</span></a>
@@ -90,30 +99,30 @@
 
                             <li class="bardness"></li>
 
-                            <li>
+                            <li class="@(currentController == "Livros" && currentAction == "Index" ? "active" : "")">
                                 <a asp-controller="Livros" asp-action="Index"><i class="fas fa-book"></i> <span>Cadastro de
                                         Livros</span></a>
                             </li>
-                            <li>
+                            <li class="@(currentController == "Setores" && currentAction == "Index" ? "active" : "")">
                                 <a asp-controller="Setores" asp-action="Index"><i class="fas fa-users"></i> <span>Cadastro de
                                         Setores</span></a>
                             </li>
-                            <li>
-                                <a asp-controller="Categorias" asp-action="Index"><i class="fas fa-tags"></i> <span>Cadastro de
-                                        Categorias</span></a>
+                            <li class="@(currentController == "Categorias" && currentAction == "Index" ? "active" : "")">
+                                <a asp-controller="Categorias" asp-action="Index"><i class="fas fa-tags"></i> <span>Cadastro
+                                        de Categorias</span></a>
                             </li>
-                            <li>
-                                <a asp-controller="Usuarios" asp-action="Index"><i class="fas fa-user-plus"></i><span>Cadastro
-                                        de Usuários</span></a>
+                            <li class="@(currentController == "Usuarios" && currentAction == "Index" ? "active" : "")">
+                                <a asp-controller="Usuarios" asp-action="Index"><i class="fas fa-user-plus"></i>
+                                    <span>Cadastro de Usuários</span></a>
                             </li>
 
                             <li class="bardness"></li>
 
-                            <li>
+                            <li class="@(currentController == "Usuarios" && currentAction == "Perfil" ? "active" : "")">
                                 <a asp-controller="Usuarios" asp-action="Perfil"><i class="fas fa-user-circle"></i> <span>Minha
                                         Conta</span></a>
                             </li>
-                            <li>
+                            <li class="@(currentAction == "Notificacoes" ? "active" : "")">
                                 <a href="#"><i class="fas fa-bell"></i> <span>Notificações</span></a>
                             </li>
                         </ul>
@@ -126,32 +135,30 @@
                 <aside class="sidebar sidebar-expanded">
                     <nav class="sidebar-nav">
                         <ul>
-                            <li>
-                                <a asp-controller="Aluno" asp-action="Index"><i class="fas fa-home"></i><span>Inicio</span></a>
+                            <li class="@(currentController == "Aluno" && currentAction == "Index" ? "active" : "")">
+                                <a asp-controller="Aluno" asp-action="Index"><i class="fas fa-home"></i>
+                                    <span>Início</span></a>
                             </li>
-                            <li>
-                                <a asp-controller="Aluno" asp-action="MeusLivros"><i class="fas fa-handshake"></i><span>Meus
+                            <li class="@(currentController == "Aluno" && currentAction == "MeusLivros" ? "active" : "")">
+                                <a asp-controller="Aluno" asp-action="MeusLivros"><i class="fas fa-book-reader"></i> <span>Meus
                                         Livros</span></a>
                             </li>
 
                             <li class="bardness"></li>
 
-                            <li>
-                                <a asp-controller="Aluno" asp-action="Emprestimos"><i class="fas fa-book"></i> <span>Emprestimo
-                                        de Livros</span></a>
+                            <li class="@(currentController == "Aluno" && currentAction == "Emprestimos" ? "active" : "")">
+                                <a asp-controller="Aluno" asp-action="Emprestimos"><i class="fas fa-book"></i> <span>Emprestimo de
+                                        Livros</span></a>
                             </li>
-                            <li>
-                                <a asp-controller="Aluno" asp-action="Devolvidos"><i class="fas fa-users"></i>
-                                    <span>Devolvidos</span></a>
+                            <li class="@(currentController == "Aluno" && currentAction == "Devolvidos" ? "active" : "")">
+                                <a asp-controller="Aluno" asp-action="Devolvidos"><i class="fas fa-users"></i> <span>Devolvidos</span></a>
                             </li>
-
-                            <li>
+                             <li class="@(currentController == "Usuarios" && currentAction == "Perfil" ? "active" : "")">
                                 <a asp-controller="Usuarios" asp-action="Perfil"><i class="fas fa-user-circle"></i> <span>Minha
                                         Conta</span></a>
                             </li>
-                            <li>
-                                <a asp-controller="Aluno" asp-action="Notificacoes"><i class="fas fa-bell"></i>
-                                    <span>Notificações</span></a>
+                            <li class="@(currentAction == "Notificacoes" ? "active" : "")">
+                                <a href="#"><i class="fas fa-bell"></i> <span>Notificações</span></a>
                             </li>
                         </ul>
                     </nav>
