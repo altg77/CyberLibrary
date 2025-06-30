@@ -1,6 +1,6 @@
 @model List<Emprestimo>
 @{
-    ViewData["Title"] = "Emprestimos";
+    ViewData["Title"] = "Empréstimos";
 }
 
 @section Styles {
@@ -11,7 +11,15 @@
     <script>
         function confirmarExclusao(id, livroTitulo, usuarioNome) {
             if (confirm(`Tem certeza que deseja remover o empréstimo do livro "${livroTitulo}" emprestado a "${usuarioNome}" (ID: ${id})? Esta ação é irreversível!`)) {
+                // Change to point to the actual POST action for deletion
+                document.getElementById(`formExcluir_${id}`).action = '@Url.Action("Remover", "Emprestimos")';
                 document.getElementById(`formExcluir_${id}`).submit();
+            }
+        }
+
+        function confirmarDevolucao(id, livroTitulo, usuarioNome) {
+            if (confirm(`Confirmar a devolução do livro "${livroTitulo}" por "${usuarioNome}" (ID: ${id})?`)) {
+                document.getElementById(`formDevolver_${id}`).submit();
             }
         }
     </script>
@@ -34,14 +42,14 @@
 
 @if (TempData["MensagemSucesso"] != null)
 {
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
         @TempData["MensagemSucesso"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
 @if (TempData["MensagemErro"] != null)
 {
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
         @TempData["MensagemErro"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
@@ -67,19 +75,39 @@
             {
                 <tr>
                     <td>@emprestimo.Id</td>
-                    <td>@emprestimo.Livro.Titulo</td>
-                    <td>@emprestimo.Usuario.Nome</td>
+                    <td>@emprestimo.Livro?.Titulo</td> 
+                    <td>@emprestimo.Usuario?.Nome</td> 
                     <td>@emprestimo.DataEmprestimo.ToShortDateString()</td>
-                    <td>@(emprestimo.DataDevolucaoPrevista?.ToShortDateString() ?? "N/A")</td>
-                    <td>@(emprestimo.DataDevolucaoReal?.ToShortDateString() ?? "N/A")</td>
-                    <td>@(emprestimo.Devolvido ? "Sim" : "Não")</td>
+                    <td>@(emprestimo.DataDevolucaoPrevista.ToShortDateString())</td>
+                    <td>@(emprestimo.DataDevolucaoReal?.ToShortDateString() ?? "Não Devolvido")</td> 
+                    <td>
+                        @if (emprestimo.Devolvido)
+                        {
+                            <span class="badge bg-success">Sim</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">Não</span>
+                        }
+                    </td>
                     <td>
                         <a asp-controller="Emprestimos" asp-action="Editar" asp-route-id="@emprestimo.Id" class="btn btn-primary btn-sm" role="button">Editar</a>
 
-                        <button type="button" class="btn btn-danger btn-sm"
-                                onclick="confirmarExclusao(@emprestimo.Id, '@emprestimo.Livro.Titulo', '@emprestimo.Usuario.Nome')">Excluir</button>
+                        @if (!emprestimo.Devolvido)
+                        {
+                            <button type="button" class="btn btn-success btn-sm"
+                                    onclick="confirmarDevolucao(@emprestimo.Id, '@emprestimo.Livro?.Titulo', '@emprestimo.Usuario?.Nome')">Devolver</button>
 
-                        <form id="formExcluir_@emprestimo.Id" asp-controller="Emprestimos" asp-action="Excluir" method="post" class="d-none">
+                            <form id="formDevolver_@emprestimo.Id" asp-controller="Emprestimos" asp-action="RegistrarDevolucao" method="post" class="d-none">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@emprestimo.Id" />
+                            </form>
+                        }
+
+                        <button type="button" class="btn btn-danger btn-sm"
+                                onclick="confirmarExclusao(@emprestimo.Id, '@emprestimo.Livro?.Titulo', '@emprestimo.Usuario?.Nome')">Excluir</button>
+
+                        <form id="formExcluir_@emprestimo.Id" asp-controller="Emprestimos" asp-action="Remover" method="post" class="d-none">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="id" value="@emprestimo.Id" />
                         </form>

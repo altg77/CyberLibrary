@@ -1,123 +1,168 @@
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering; // Necessário para SelectList
-using CyberLibrary2.Models;
 using CyberLibrary2.Contratos;
-using System.Linq;
-using Microsoft.AspNetCore.Authorization;
+using CyberLibrary2.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering; // For SelectList
 
-namespace CyberLibrary2.Controllers;
-
-public class EmprestimosController : Controller
+namespace CyberLibrary2.Controllers
 {
-    private readonly IEmprestimoR _emprestimoRep;
-    private readonly ILivroR _livroRep;
-    private readonly IUsuarioR _usuarioRep;
-
-    public EmprestimosController(IEmprestimoR emprestimoRep, ILivroR livroRep, IUsuarioR usuarioRep)
+    public class EmprestimosController : Controller
     {
-        _emprestimoRep = emprestimoRep;
-        _livroRep = livroRep;
-        _usuarioRep = usuarioRep;
-    }
+        private readonly IEmprestimoR _emprestimoRepository;
+        private readonly ILivroR _livroRepository; 
+        private readonly IUsuarioR _usuarioRepository; 
 
-    [Authorize]
-    public IActionResult Index()
-    {
-        List<Emprestimo> emprestimos = _emprestimoRep.ListarEmprestimos();
-        return View(emprestimos);
-    }
-
-    public IActionResult Adicionar()
-    {
-        ViewBag.Livros = new SelectList(_livroRep.listarLivros().Where(l => l.Disponivel), "Id", "Titulo");
-        ViewBag.Usuarios = new SelectList(_usuarioRep.ListarUsuarios(), "Id", "Nome");
-        return View();
-    }
-
-     [HttpPost]
-    public IActionResult Adicionar(Emprestimo emprestimo)
-    {
-        if (ModelState.IsValid)
+        public EmprestimosController(IEmprestimoR emprestimoRepository, ILivroR livroRepository, IUsuarioR usuarioRepository)
         {
-            try
-            {
-                _emprestimoRep.Adicionar(emprestimo);
-                TempData["MensagemSucesso"] = "Empréstimo registrado com sucesso!";
-            }
-            catch (Exception ex)
-            {
-                TempData["MensagemErro"] = $"Erro ao registrar empréstimo: {ex.Message}";
-                Debug.WriteLine($"Erro ao registrar empréstimo: {ex.Message}");
-            }
+            _emprestimoRepository = emprestimoRepository;
+            _livroRepository = livroRepository;
+            _usuarioRepository = usuarioRepository;
         }
-        else
+
+        // GET: Emprestimos
+        public IActionResult Index()
         {
-            TempData["MensagemErro"] = "Por favor, corrija os erros de validação no formulário.";
-            foreach (var state in ModelState)
+            List<Emprestimo> emprestimos = _emprestimoRepository.ListarEmprestimos();
+            return View(emprestimos);
+        }
+
+        // GET: Emprestimos/Adicionar
+        public IActionResult Adicionar()
+        {
+            ViewBag.Livros = new SelectList(_livroRepository.listarLivros().Where(l => l.QuantidadeDisponivel > 0), "Id", "Titulo");
+            ViewBag.Usuarios = new SelectList(_usuarioRepository.ListarUsuarios(), "Id", "Nome");
+            return View();
+        }
+
+        // POST: Emprestimos/Adicionar
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Adicionar(Emprestimo emprestimo)
+        {
+            // Remove validation for navigation properties if they are not directly bound
+            ModelState.Remove("Livro");
+            ModelState.Remove("Usuario");
+            ModelState.Remove("Devolvido"); // Devolvido is false by default on creation
+
+            if (ModelState.IsValid)
             {
-                foreach (var error in state.Value.Errors)
+                try
                 {
-                    Debug.WriteLine($"Erro de Validação em {state.Key}: {error.ErrorMessage}");
+                    _emprestimoRepository.AdicionarEmprestimo(emprestimo);
+                    TempData["MensagemSucesso"] = "Empréstimo registrado com sucesso!";
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    TempData["MensagemErro"] = $"Erro ao registrar empréstimo: {ex.Message}";
                 }
             }
+
+            // If we got this far, something failed, redisplay form
+            ViewBag.Livros = new SelectList(_livroRepository.listarLivros().Where(l => l.QuantidadeDisponivel > 0), "Id", "Titulo", emprestimo.LivroId);
+            ViewBag.Usuarios = new SelectList(_usuarioRepository.ListarUsuarios(), "Id", "Nome", emprestimo.UsuarioId);
+            return View(emprestimo);
         }
 
-        return RedirectToAction("Index");
-    }
-
-    public IActionResult Editar(int id)
-    {
-        var emprestimo = _emprestimoRep.BuscarId(id);
-        if (emprestimo == null)
+        // GET: Emprestimos/Editar/5
+        public IActionResult Editar(int id)
         {
-            TempData["MensagemErro"] = "Empréstimo não encontrado.";
-            return RedirectToAction("Index");
+            Emprestimo emprestimo = _emprestimoRepository.BuscarEmprestimoPorId(id);
+            if (emprestimo == null)
+            {
+                return NotFound();
+            }
+
+            var availableBooks = _livroRepository.listarLivros()
+                                                  .Where(l => l.QuantidadeDisponivel > 0 || l.Id == emprestimo.LivroId)
+                                                  .ToList();
+
+            ViewBag.Livros = new SelectList(availableBooks, "Id", "Titulo", emprestimo.LivroId);
+            ViewBag.Usuarios = new SelectList(_usuarioRepository.ListarUsuarios(), "Id", "Nome", emprestimo.UsuarioId);
+            return View(emprestimo);
         }
 
-        // Preenche ViewBags com listas para dropdowns
-        ViewBag.Livros = new SelectList(_livroRep.listarLivros(), "Id", "Titulo", emprestimo.LivroId);
-        ViewBag.Usuarios = new SelectList(_usuarioRep.ListarUsuarios(), "Id", "Nome", emprestimo.UsuarioId);
-        return View(emprestimo);
-    }
+        // POST: Emprestimos/Atualizar
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Atualizar(Emprestimo emprestimo)
+        {
+            ModelState.Remove("Livro");
+            ModelState.Remove("Usuario");
 
-    [HttpPost]
-    public IActionResult Atualizar(Emprestimo emprestimo)
-    {
-        if (ModelState.IsValid)
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _emprestimoRepository.AtualizarEmprestimo(emprestimo);
+                    TempData["MensagemSucesso"] = "Empréstimo atualizado com sucesso!";
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    TempData["MensagemErro"] = $"Erro ao atualizar empréstimo: {ex.Message}";
+                }
+            }
+
+            // If we got this far, something failed, redisplay form
+            var availableBooks = _livroRepository.listarLivros()
+                                                  .Where(l => l.QuantidadeDisponivel > 0 || l.Id == emprestimo.LivroId)
+                                                  .ToList();
+            ViewBag.Livros = new SelectList(availableBooks, "Id", "Titulo", emprestimo.LivroId);
+            ViewBag.Usuarios = new SelectList(_usuarioRepository.ListarUsuarios(), "Id", "Nome", emprestimo.UsuarioId);
+            return View("Editar", emprestimo);
+        }
+
+        // GET: Emprestimos/ConfirmarRemocao/5
+        public IActionResult ConfirmarRemocao(int id)
+        {
+            Emprestimo emprestimo = _emprestimoRepository.BuscarEmprestimoPorId(id);
+            if (emprestimo == null)
+            {
+                return NotFound();
+            }
+            return View(emprestimo);
+        }
+
+        // POST: Emprestimos/Remover/5
+        [HttpPost, ActionName("Remover")]
+        [ValidateAntiForgeryToken]
+        public IActionResult RemoverConfirmado(int id)
         {
             try
             {
-                _emprestimoRep.Atualizar(emprestimo);
-                TempData["MensagemSucesso"] = "Empréstimo atualizado com sucesso!";
-                return RedirectToAction("Index");
+                _emprestimoRepository.ExcluirEmprestimo(id);
+                TempData["MensagemSucesso"] = "Empréstimo removido com sucesso!";
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, ex.Message);
-                TempData["MensagemErro"] = $"Erro ao atualizar empréstimo: {ex.Message}";
-                Debug.WriteLine($"Erro ao atualizar empréstimo: {ex.Message}");
+                TempData["MensagemErro"] = $"Erro ao remover empréstimo: {ex.Message}";
+                return RedirectToAction(nameof(ConfirmarRemocao), new { id = id });
             }
         }
-        // Recarrega as ViewBags em caso de erro de validação ou exceção
-        ViewBag.Livros = new SelectList(_livroRep.listarLivros(), "Id", "Titulo", emprestimo.LivroId);
-        ViewBag.Usuarios = new SelectList(_usuarioRep.ListarUsuarios(), "Id", "Nome", emprestimo.UsuarioId);
-        return View(emprestimo);
-    }
 
-    [HttpPost]
-    public IActionResult Excluir(int id)
-    {
-        try
+        // POST: Emprestimos/RegistrarDevolucao/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult RegistrarDevolucao(int id)
         {
-            _emprestimoRep.Excluir(id);
-            TempData["MensagemSucesso"] = "Empréstimo excluído com sucesso!";
+            try
+            {
+                bool success = _emprestimoRepository.RegistrarDevolucao(id);
+                if (success)
+                {
+                    TempData["MensagemSucesso"] = "Devolução registrada com sucesso!";
+                }
+                else
+                {
+                    TempData["MensagemErro"] = "Não foi possível registrar a devolução.";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["MensagemErro"] = $"Erro ao registrar devolução: {ex.Message}";
+            }
+            return RedirectToAction(nameof(Index));
         }
-        catch (Exception ex)
-        {
-            TempData["MensagemErro"] = $"Erro ao excluir empréstimo: {ex.Message}";
-            Debug.WriteLine($"Erro ao excluir empréstimo: {ex.Message}");
-        }
-        return RedirectToAction("Index");
     }
 }

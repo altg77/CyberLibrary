@@ -17,28 +17,29 @@ namespace CyberLibrary2.repository
             _bancoContext = bancoContext;
         }
 
-        public Emprestimo Adicionar(Emprestimo emprestimo)
+        public Emprestimo AdicionarEmprestimo(Emprestimo emprestimo)
         {
-            var livro = _bancoContext.Livros.FirstOrDefault(l => l.Id == emprestimo.LivroId);
+            // Eager loading for Livro and Usuario
+            emprestimo.Livro = _bancoContext.Livros.FirstOrDefault(l => l.Id == emprestimo.LivroId);
+            emprestimo.Usuario = _bancoContext.Usuarios.FirstOrDefault(u => u.Id == emprestimo.UsuarioId);
 
-            if (livro != null && livro.QuantidadeDisponivel > 0)
-            {
-                livro.QuantidadeDisponivel--;
-                if (livro.QuantidadeDisponivel == 0)
-                {
-                    livro.Disponivel = false;
-                }
-                _bancoContext.Livros.Update(livro);
-            }
-
-            else if (livro != null && livro.QuantidadeDisponivel == 0)
-            {
-                throw new Exception("Livro indisponível para empréstimo.");
-            }
-            else
+            if (emprestimo.Livro == null)
             {
                 throw new Exception("Livro não encontrado.");
             }
+
+            if (emprestimo.Usuario == null)
+            {
+                throw new Exception("Usuário não encontrado.");
+            }
+
+            if (emprestimo.Livro.QuantidadeDisponivel <= 0)
+            {
+                throw new Exception("Livro indisponível para empréstimo.");
+            }
+
+            emprestimo.Livro.QuantidadeDisponivel--;
+            emprestimo.Livro.Disponivel = emprestimo.Livro.QuantidadeDisponivel > 0;
 
             _bancoContext.Emprestimos.Add(emprestimo);
             _bancoContext.SaveChanges();
@@ -47,82 +48,29 @@ namespace CyberLibrary2.repository
 
         public List<Emprestimo> ListarEmprestimos()
         {
-            // Inclui as propriedades de navegação para ter acesso aos dados do Livro e do Usuário
+            // Include related entities (Livro and Usuario) for richer data
             return _bancoContext.Emprestimos
                                 .Include(e => e.Livro)
                                 .Include(e => e.Usuario)
                                 .ToList();
         }
 
-        public List<Emprestimo> ListarEmprestimosPorUsuario(int usuarioId)
+        public Emprestimo BuscarEmprestimoPorId(int id)
         {
             return _bancoContext.Emprestimos
                                 .Include(e => e.Livro)
                                 .Include(e => e.Usuario)
-                                .Where(e => e.UsuarioId == usuarioId)
-                                .ToList();
+                                .FirstOrDefault(e => e.Id == id);
         }
 
-        public List<Emprestimo> ListarEmprestimosPorLivro(int livroId)
+        public Emprestimo AtualizarEmprestimo(Emprestimo emprestimo)
         {
-            return _bancoContext.Emprestimos
-                                .Include(e => e.Livro)
-                                .Include(e => e.Usuario)
-                                .Where(e => e.LivroId == livroId)
-                                .ToList();
-        }
-
-        public Emprestimo BuscarId(int id)
-        {
-            return _bancoContext.Emprestimos
-                                .Include(e => e.Livro)
-                                .Include(e => e.Usuario)
-                                .FirstOrDefault(x => x.Id == id);
-        }
-
-        public Emprestimo Atualizar(Emprestimo emprestimo)
-        {
-            Emprestimo emprestimoDB = BuscarId(emprestimo.Id);
+            Emprestimo emprestimoDB = BuscarEmprestimoPorId(emprestimo.Id);
 
             if (emprestimoDB == null)
             {
-                throw new Exception("Empréstimo não encontrado para atualização.");
+                throw new Exception("Empréstimo não encontrado.");
             }
-
-            // Lógica para devolver o livro (incrementar quantidade disponível)
-            if (emprestimo.Devolvido && !emprestimoDB.Devolvido) // Se foi marcado como devolvido agora
-            {
-                var livro = _bancoContext.Livros.FirstOrDefault(l => l.Id == emprestimo.LivroId);
-                if (livro != null)
-                {
-                    livro.QuantidadeDisponivel++;
-                    livro.Disponivel = true; // Marcar como disponível novamente
-                    _bancoContext.Livros.Update(livro);
-                }
-            }
-            // Se o livro foi devolvido e depois "desdevolvido" (não é comum, mas para consistência)
-            else if (!emprestimo.Devolvido && emprestimoDB.Devolvido)
-            {
-                var livro = _bancoContext.Livros.FirstOrDefault(l => l.Id == emprestimo.LivroId);
-                if (livro != null && livro.QuantidadeDisponivel > 0)
-                {
-                    livro.QuantidadeDisponivel--;
-                    if (livro.QuantidadeDisponivel == 0)
-                    {
-                        livro.Disponivel = false;
-                    }
-                    _bancoContext.Livros.Update(livro);
-                }
-                else if (livro != null && livro.QuantidadeDisponivel == 0)
-                {
-                    throw new Exception("Não é possível emprestar novamente, livro indisponível.");
-                }
-                else
-                {
-                    throw new Exception("Livro não encontrado.");
-                }
-            }
-
 
             emprestimoDB.LivroId = emprestimo.LivroId;
             emprestimoDB.UsuarioId = emprestimo.UsuarioId;
@@ -136,30 +84,71 @@ namespace CyberLibrary2.repository
             return emprestimoDB;
         }
 
-        public bool Excluir(int id)
+        public bool ExcluirEmprestimo(int id)
         {
-            Emprestimo emprestimoDB = BuscarId(id);
+            Emprestimo emprestimoDB = BuscarEmprestimoPorId(id);
 
             if (emprestimoDB == null)
             {
                 throw new Exception("Empréstimo não encontrado para exclusão.");
             }
 
-            // Se o empréstimo não foi devolvido, incrementa a quantidade disponível antes de excluir
-            if (!emprestimoDB.Devolvido)
-            {
-                var livro = _bancoContext.Livros.FirstOrDefault(l => l.Id == emprestimoDB.LivroId);
-                if (livro != null)
-                {
-                    livro.QuantidadeDisponivel++;
-                    livro.Disponivel = true; // Marcar como disponível novamente
-                    _bancoContext.Livros.Update(livro);
-                }
-            }
-
             _bancoContext.Emprestimos.Remove(emprestimoDB);
             _bancoContext.SaveChanges();
             return true;
+        }
+
+        public bool RegistrarDevolucao(int emprestimoId)
+        {
+            Emprestimo emprestimoDB = BuscarEmprestimoPorId(emprestimoId);
+
+            if (emprestimoDB == null)
+            {
+                throw new Exception("Empréstimo não encontrado.");
+            }
+
+            if (emprestimoDB.Devolvido)
+            {
+                throw new Exception("Este livro já foi devolvido.");
+            }
+
+            emprestimoDB.DataDevolucaoReal = DateTime.Now;
+            emprestimoDB.Devolvido = true;
+
+            // Increase available quantity
+            Livro livro = _bancoContext.Livros.FirstOrDefault(l => l.Id == emprestimoDB.LivroId);
+            if (livro != null)
+            {
+                livro.QuantidadeDisponivel++;
+                livro.Disponivel = livro.QuantidadeDisponivel > 0;
+            }
+            else
+            {
+                throw new Exception("Livro associado ao empréstimo não encontrado.");
+            }
+
+            _bancoContext.Emprestimos.Update(emprestimoDB);
+            _bancoContext.Livros.Update(livro); // Update the book's availability
+            _bancoContext.SaveChanges();
+            return true;
+        }
+
+        public List<Emprestimo> ListarEmprestimosPorUsuario(int usuarioId)
+        {
+            return _bancoContext.Emprestimos
+                                .Include(e => e.Livro)
+                                .Include(e => e.Usuario)
+                                .Where(e => e.UsuarioId == usuarioId)
+                                .ToList();
+        }
+
+        public List<Emprestimo> ListarEmprestimosAtivos()
+        {
+            return _bancoContext.Emprestimos
+                                .Include(e => e.Livro)
+                                .Include(e => e.Usuario)
+                                .Where(e => !e.Devolvido)
+                                .ToList();
         }
     }
 }

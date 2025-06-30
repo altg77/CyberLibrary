@@ -4,12 +4,13 @@ namespace CyberLibrary2.Contratos
 {
     public interface IEmprestimoR
     {
-        Emprestimo BuscarId(int id);
-        Emprestimo Adicionar(Emprestimo emprestimo);
+         Emprestimo AdicionarEmprestimo(Emprestimo emprestimo);
         List<Emprestimo> ListarEmprestimos();
+        Emprestimo BuscarEmprestimoPorId(int id);
+        Emprestimo AtualizarEmprestimo(Emprestimo emprestimo);
+        bool ExcluirEmprestimo(int id);
+        bool RegistrarDevolucao(int emprestimoId);
         List<Emprestimo> ListarEmprestimosPorUsuario(int usuarioId);
-        List<Emprestimo> ListarEmprestimosPorLivro(int livroId);
-        Emprestimo Atualizar(Emprestimo emprestimo);
-        bool Excluir(int id);
+        List<Emprestimo> ListarEmprestimosAtivos();
     }
 }

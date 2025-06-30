@@ -30,16 +30,13 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         var profilePictureBase64 = User.FindFirst("ProfilePicture")?.Value;
-                        var profilePictureSrc = string.IsNullOrEmpty(profilePictureBase64) ?
-                        "https://w7.pngwing.com/pngs/1000/665/png-transparent-computer-icons-profile-s-free-angle-sphere-profile-cliparts-free.png"
-                        :
-                        $"data:image/jpeg;base64,{profilePictureBase64}";
+                    var profilePictureSrc = string.IsNullOrEmpty(profilePictureBase64) ? "https://w7.pngwing.com/pngs/1000/665/png-transparent-computer-icons-profile-s-free-angle-sphere-profile-cliparts-free.png" :
+                    $"data:image/jpeg;base64,{profilePictureBase64}";
 
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                                <img src="@profilePictureSrc" alt="Foto de Perfil" class="rounded-circle"
-                                    style="width: 40px; height: 40px;">
+                                <img src="@profilePictureSrc" alt="Foto de Perfil" class="rounded-circle" style="width: 40px; height: 40px;">
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-name">@User.Identity.Name</a></li>

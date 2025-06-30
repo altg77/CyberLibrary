@@ -135,7 +135,6 @@ public class UsuariosController : Controller
         if (ModelState.IsValid)
         {
             _usuarioRep.Adicionar(usuario);
-            TempData["MensagemSucesso"] = "Usuário adicionado com sucesso!";
             return RedirectToAction("Index");
         }
         return View(usuario);
@@ -212,7 +211,6 @@ public class UsuariosController : Controller
                     new ClaimsPrincipal(claimsIdentity),
                     authProperties);
 
-                TempData["MensagemSucesso"] = "Perfil atualizado com sucesso!";
                 return RedirectToAction("Perfil");
             }
             catch (Exception ex)

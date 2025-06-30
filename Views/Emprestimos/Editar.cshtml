@@ -1,6 +1,6 @@
 @model Emprestimo
 @{
-    ViewData["Title"] = "Editar Emprestimo";
+    ViewData["Title"] = "Editar Empréstimo";
 }
 
 @section Styles {
@@ -8,63 +8,65 @@
 }
 
 @section Scripts {
-    <script src=""></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
 
 <h3 class="mb-2">Editar Empréstimo</h3>
 
 <div class="card p-4 shadow-sm">
-    <form asp-controller="Emprestimos" asp-action="Editar" method="post">
+    <form asp-controller="Emprestimos" asp-action="Atualizar" method="post"> 
 
         <input type="hidden" asp-for="Id" />
-        <input type="hidden" asp-for="LivroId" />
-        <input type="hidden" asp-for="UsuarioId" />
-        <input type="hidden" asp-for="DataEmprestimo" />
+        <input type="hidden" asp-for="DataEmprestimo" /> 
 
         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
         <div class="row g-3 mb-3">
             <div class="col-md-6">
-                <label class="form-label">Usuário</label>
-                    <select asp-for="UsuarioId" class="form-control" asp-items="ViewBag.Usuarios"></select>
-                <div class="col-md-6">
-                    <label class="form-label">Livro</label>
-                    <select asp-for="LivroId" class="form-control" asp-items="ViewBag.Livros"></select>
-                </div>
+                <label asp-for="UsuarioId" class="form-label">Usuário</label> 
+                <select asp-for="UsuarioId" class="form-control" asp-items="ViewBag.Usuarios"></select>
+                <span asp-validation-for="UsuarioId" class="text-danger"></span> 
             </div>
+            <div class="col-md-6"> 
+                <label asp-for="LivroId" class="form-label">Livro</label> 
+                <select asp-for="LivroId" class="form-control" asp-items="ViewBag.Livros"></select>
+                <span asp-validation-for="LivroId" class="text-danger"></span> 
+            </div>
+        </div>
 
-            <div class="row g-3 mb-3">
-                <div class="col-md-6">
-                    <label for="dataEmprestimo" class="form-label">Data de Empréstimo</label>
-                    <input type="date" class="form-control" value="@Model.DataEmprestimo.ToString("yyyy-MM-dd")"
-                        disabled>
-                </div>
-                <div class="col-md-6">
-                    <label asp-for="DataDevolucaoPrevista" class="form-label">Data de Devolução Prevista</label>
-                    <input type="date" asp-for="DataDevolucaoPrevista" class="form-control">
-                    <span asp-validation-for="DataDevolucaoPrevista" class="text-danger"></span>
-                </div>
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label for="dataEmprestimoDisplay" class="form-label">Data de Empréstimo</label>
+                <input type="date" id="dataEmprestimoDisplay" class="form-control" value="@Model.DataEmprestimo.ToString("yyyy-MM-dd")" disabled>
             </div>
+            <div class="col-md-6">
+                <label asp-for="DataDevolucaoPrevista" class="form-label">Data de Devolução Prevista</label>
+                <input type="date" asp-for="DataDevolucaoPrevista" class="form-control">
+                <span asp-validation-for="DataDevolucaoPrevista" class="text-danger"></span>
+            </div>
+        </div>
 
-            <div class="row g-3 mb-3">
-                <div class="col-md-6">
-                    <label asp-for="DataDevolucaoReal" class="form-label">Data de Devolução Real</label>
-                    <input type="date" asp-for="DataDevolucaoReal" class="form-control">
-                    <span asp-validation-for="DataDevolucaoReal" class="text-danger"></span>
-                </div>
-                <div class="col-md-6">
-                    <label asp-for="Devolvido" class="form-label">Devolvido?</label>
-                    <select asp-for="Devolvido" class="form-select">
-                        <option value="false">Não</option>
-                        <option value="true">Sim</option>
-                    </select>
-                    <span asp-validation-for="Devolvido" class="text-danger"></span>
-                </div>
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label asp-for="DataDevolucaoReal" class="form-label">Data de Devolução Real</label>
+                <input type="date" asp-for="DataDevolucaoReal" class="form-control" value="@(Model.DataDevolucaoReal.HasValue ? Model.DataDevolucaoReal.Value.ToString("yyyy-MM-dd") : "")">
+                <span asp-validation-for="DataDevolucaoReal" class="text-danger"></span>
             </div>
+            <div class="col-md-6">
+                <label asp-for="Devolvido" class="form-label">Devolvido?</label>
+                <select asp-for="Devolvido" class="form-select">
+                    <option value="false">Não</option>
+                    <option value="true">Sim</option>
+                </select>
+                <span asp-validation-for="Devolvido" class="text-danger"></span>
+            </div>
+        </div>
 
-            <div class="d-flex justify-content-end mt-4">
-                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-                <a asp-controller="Emprestimos" asp-action="Index" class="btn btn-secondary">Cancelar</a>
-            </div>
+        <div class="d-flex justify-content-end mt-4 gap-2">
+            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+            <a asp-controller="Emprestimos" asp-action="Index" class="btn btn-secondary">Cancelar</a>
+        </div>
     </form>
 </div>

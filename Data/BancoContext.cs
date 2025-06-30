@@ -14,21 +14,21 @@ namespace CyberLibrary2.Data
         public DbSet<Turma> Turmas { get; set; }
         public DbSet<Emprestimo> Emprestimos { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder); 
 
             modelBuilder.Entity<Emprestimo>()
-                .HasOne(e => e.Livro)
-                .WithMany() // ou WithMany(l => l.Emprestimos) se Livro tiver uma coleção de Emprestimos
-                .HasForeignKey(e => e.LivroId)
-                .OnDelete(DeleteBehavior.Restrict); // Evita exclusão em cascata de livros
+                .HasOne(e => e.Livro)           
+                .WithMany()                     
+                .HasForeignKey(e => e.LivroId) 
+                .OnDelete(DeleteBehavior.Restrict); 
 
             modelBuilder.Entity<Emprestimo>()
-                .HasOne(e => e.Usuario)
-                .WithMany() // ou WithMany(u => u.Emprestimos) se Usuario tiver uma coleção de Emprestimos
-                .HasForeignKey(e => e.UsuarioId)
-                .OnDelete(DeleteBehavior.Restrict); // Evita exclusão em cascata de usuários
+                .HasOne(e => e.Usuario)        
+                .WithMany()                    
+                .HasForeignKey(e => e.UsuarioId) 
+                .OnDelete(DeleteBehavior.Restrict); 
         }
 
     }

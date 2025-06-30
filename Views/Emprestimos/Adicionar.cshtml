@@ -1,6 +1,6 @@
 @model Emprestimo
 @{
-    ViewData["Title"] = "Registrar Emprestimo";
+    ViewData["Title"] = "Registrar Empréstimo";
 }
 
 @section Styles {
@@ -11,56 +11,73 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const dataEmprestimoInput = document.getElementById('DataEmprestimo');
+            if (!dataEmprestimoInput.value) {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed
+                const day = String(today.getDate()).padStart(2, '0');
+                dataEmprestimoInput.value = `${year}-${month}-${day}`;
+            }
+
+            // Set DataDevolucaoPrevista to one week from today by default
+            const dataDevolucaoPrevistaInput = document.getElementById('DataDevolucaoPrevista');
+            if (!dataDevolucaoPrevistaInput.value) {
+                const oneWeekLater = new Date();
+                oneWeekLater.setDate(oneWeekLater.getDate() + 7);
+                const year = oneWeekLater.getFullYear();
+                const month = String(oneWeekLater.getMonth() + 1).padStart(2, '0');
+                const day = String(oneWeekLater.getDate()).padStart(2, '0');
+                dataDevolucaoPrevistaInput.value = `${year}-${month}-${day}`;
+            }
+        });
+    </script>
 }
 
-<h3 class="mb-2">Cadastro novo Emprestimo</h3>
+<h3 class="mb-2">Registrar Novo Empréstimo</h3>
 
 <div class="card p-4 shadow-sm">
-    <div class="row g-3">
-        <div class="card-body">
-            <form asp-controller="Emprestimos" asp-action="Adicionar" method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="card-body">
+        <form asp-controller="Emprestimos" asp-action="Adicionar" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div> 
 
-                <div class="mb-3">
-                    <label asp-for="LivroId" class="form-label"></label>
-                    <select asp-for="LivroId" class="form-select" asp-items="ViewBag.Livros">
-                        <option value="">Selecione um Livro</option>
-                    </select>
-                    <span asp-validation-for="LivroId" class="text-danger"></span>
-                </div>
+            <div class="mb-3">
+                <label asp-for="LivroId" class="form-label">Livro</label> 
+                <select asp-for="LivroId" class="form-select" asp-items="ViewBag.Livros">
+                    <option value="">Selecione um Livro</option>
+                </select>
+                <span asp-validation-for="LivroId" class="text-danger"></span>
+            </div>
 
-                <div class="mb-3">
-                    <label asp-for="UsuarioId" class="form-label"></label>
-                    <select asp-for="UsuarioId" class="form-select" asp-items="ViewBag.Usuarios">
-                        <option value="">Selecione um Usuário</option>
-                    </select>
-                    <span asp-validation-for="UsuarioId" class="text-danger"></span>
-                </div>
+            <div class="mb-3">
+                <label asp-for="UsuarioId" class="form-label">Usuário</label> 
+                <select asp-for="UsuarioId" class="form-select" asp-items="ViewBag.Usuarios">
+                    <option value="">Selecione um Usuário</option>
+                </select>
+                <span asp-validation-for="UsuarioId" class="text-danger"></span>
+            </div>
 
-                <div class="mb-3">
-                    <label asp-for="DataEmprestimo" class="form-label"></label>
-                    <input asp-for="DataEmprestimo" type="date" class="form-control" />
-                    <span asp-validation-for="DataEmprestimo" class="text-danger"></span>
-                </div>
+            <div class="mb-3">
+                <label asp-for="DataEmprestimo" class="form-label">Data de Empréstimo</label>
+                <input asp-for="DataEmprestimo" type="date" class="form-control" />
+                <span asp-validation-for="DataEmprestimo" class="text-danger"></span>
+            </div>
 
-                <div class="mb-3">
-                    <label asp-for="DataDevolucaoPrevista" class="form-label"></label>
-                    <input asp-for="DataDevolucaoPrevista" type="date" class="form-control" />
-                    <span asp-validation-for="DataDevolucaoPrevista" class="text-danger"></span>
-                </div>
+            <div class="mb-3">
+                <label asp-for="DataDevolucaoPrevista" class="form-label">Data de Devolução Prevista</label>
+                <input asp-for="DataDevolucaoPrevista" type="date" class="form-control" />
+                <span asp-validation-for="DataDevolucaoPrevista" class="text-danger"></span>
+            </div>
 
-                <div class="mb-3 form-check">
-                    <input asp-for="Devolvido" class="form-check-input" />
-                    <label asp-for="Devolvido" class="form-check-label"></label>
-                    <span asp-validation-for="Devolvido" class="text-danger"></span>
-                </div>
+            <input type="hidden" asp-for="Devolvido" value="false" />
 
-                <div class="d-flex justify-content-end mt-4">
-                    <button type="submit" class="btn btn-primary">Salvar</button>
-                    <button type="reset" class="btn btn-secondary" id="resetButton">Limpar</button>
-                    <a asp-controller="Emprestimos" asp-action="Index" type="buttom" class="btn btn-secondary">Cancelar</a>
-                </div>
-            </form>
-        </div>
+            <div class="d-flex justify-content-end mt-4 gap-2"> 
+                <button type="submit" class="btn btn-primary">Salvar</button>
+                <button type="reset" class="btn btn-secondary" id="resetButton">Limpar</button>
+                <a asp-controller="Emprestimos" asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
     </div>
 </div>
