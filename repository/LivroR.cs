@@ -40,12 +40,10 @@ namespace CyberLibrary2.repository
             livroDB.Titulo = livro.Titulo;
             livroDB.Autor = livro.Autor;
             livroDB.Editora = livro.Editora;
-            livroDB.Setor = livro.Setor;
             livroDB.Quantidade = livro.Quantidade;
             livroDB.Estante = livro.Estante;
             livroDB.Prateleira = livro.Prateleira;
             livroDB.Sinopse = livro.Sinopse;
-            livroDB.Categoria = livro.Categoria;
 
             if (livro.CapaImagem != null)
             {

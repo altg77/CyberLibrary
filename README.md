@@ -1,5 +1,5 @@
 # Cyber Library
-![Logo do Cyber Library](/img/white.png "Logo do Sistema")
+![Logo do Cyber Library](img/white.png "Logo do Sistema")
 
 ---
 
@@ -7,7 +7,7 @@
 
 O Cyber Library é um sistema completo de gerenciamento de biblioteca, projetado para atender tanto bibliotecários quanto usuários finais. Ele oferece funcionalidades robustas para o gerenciamento de livros, empréstimos, usuários e categorias, além de fornecer uma interface intuitiva para a interação dos leitores com o acervo.
 
-![Texto Alternativo](/img/Cyber.PNG "Título da Imagem")
+![Texto Alternativo](img/Cyber.PNG "Título da Imagem")
 
 ---
 

@@ -75,64 +75,106 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ================= CARDS ================= */
 
-document.addEventListener('DOMContentLoaded', () => {
-    const bookItems = document.querySelectorAll('.book-item');
+document.addEventListener('DOMContentLoaded', function () {
+    // Slider functionality (remains unchanged)
+    const sliderTrack = document.querySelector('.slider-track');
+    const sliderDots = document.querySelectorAll('.slider-dots .dot');
+    let currentSlide = 0;
 
-    bookItems.forEach(item => {
-        item.addEventListener('click', () => {
-            const parentCarousel = item.closest('.book-carousel');
-            const detailedBookView = parentCarousel.nextElementSibling;
+    function updateSlider() {
+        if (sliderTrack) {
+            sliderTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+        sliderDots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentSlide);
+        });
+    }
 
-            if (detailedBookView && detailedBookView.classList.contains('detailed-book-view')) {
-                const detailedBookPath = detailedBookView.querySelector('.detailed-book-path');
-                const detailedBookCoverImg = detailedBookView.querySelector('.detailed-book-cover img');
-                const detailedBookTitle = detailedBookView.querySelector('.detailed-book-title');
-                const detailedBookAuthor = detailedBookView.querySelector('.detailed-book-author');
-                const detailedBookDescription = detailedBookView.querySelector('.detailed-book-description');
-                const detailedBookTags = detailedBookView.querySelector('.detailed-book-tags'); // Seleciona a div das tags
-                const closeButton = detailedBookView.querySelector('.close-detailed-view');
-
-                // Pega os dados dos atributos data-* do item clicado
-                const title = item.dataset.title;
-                const author = item.dataset.author;
-                const description = item.dataset.description;
-                const coverSrc = item.dataset.coverUrl;
-                const category = item.dataset.category; // Pega a categoria do atributo data-category
-
-                // Preenche os detalhes na visualização detalhada
-                detailedBookPath.textContent = title;
-                detailedBookCoverImg.src = coverSrc;
-                detailedBookCoverImg.alt = `Capa do livro ${title}`;
-                detailedBookTitle.textContent = title;
-                detailedBookAuthor.textContent = author;
-                detailedBookDescription.textContent = description;
-
-                // Limpa as tags existentes antes de adicionar as novas (para evitar duplicidade)
-                detailedBookTags.innerHTML = ''; 
-
-                // Adiciona a categoria como uma tag (span)
-                if (category) {
-                    const categorySpan = document.createElement('span');
-                    categorySpan.textContent = category;
-                    detailedBookTags.appendChild(categorySpan);
-                }
-
-                // Esconde todas as outras visualizações detalhadas que possam estar abertas
-                document.querySelectorAll('.detailed-book-view:not(.hidden)').forEach(openView => {
-                    openView.classList.add('hidden');
-                });
-
-                // Mostra a visualização detalhada correta
-                detailedBookView.classList.remove('hidden');
-
-                // Rola a página para a visualização detalhada
-                detailedBookView.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-                // Define o manipulador de clique para o botão de fechar, específico para esta visualização
-                closeButton.onclick = () => {
-                    detailedBookView.classList.add('hidden');
-                };
-            }
+    sliderDots.forEach(dot => {
+        dot.addEventListener('click', function () {
+            currentSlide = parseInt(this.dataset.slide);
+            updateSlider();
         });
     });
+
+    setInterval(() => {
+        currentSlide = (currentSlide + 1) % sliderDots.length;
+        updateSlider();
+    }, 5000);
+
+    // In-line Detailed Book View functionality
+    let currentActiveDetailedView = null; // To keep track of the currently open detail view
+
+    document.querySelectorAll('.book-item').forEach(item => {
+        item.addEventListener('click', function () {
+            const bookCarouselSection = this.closest('.book-section'); // Get the parent section
+            let detailedView = bookCarouselSection.querySelector('.inline-detailed-book-view');
+
+            // If a detailed view is already open in this section, close it
+            if (currentActiveDetailedView && currentActiveDetailedView !== detailedView) {
+                currentActiveDetailedView.classList.remove('active');
+            }
+            if (detailedView && detailedView.classList.contains('active') && currentActiveDetailedView === detailedView) {
+                // If clicking the same item again, hide it
+                detailedView.classList.remove('active');
+                currentActiveDetailedView = null;
+                return; // Exit function
+            }
+
+
+            // If no detailed view exists, or if it's the first time
+            if (!detailedView) {
+                detailedView = document.createElement('div');
+                detailedView.classList.add('inline-detailed-book-view');
+                detailedView.innerHTML = `
+                            <button class="close-inline-view">&times;</button>
+                            <div class="detailed-cover-col">
+                                <img class="detailed-cover-img" src="" alt="Capa do livro">
+                            </div>
+                            <div class="detailed-info-col">
+                                <h2 class="detailed-title"></h2>
+                                <p class="detailed-author"></p>
+                                <div class="detailed-rating">
+                                    <i class="fas fa-star filled"></i><i class="fas fa-star filled"></i><i class="fas fa-star filled"></i><i class="fas fa-star filled"></i><i class="fas fa-star"></i>
+                                    <span class="star-count"></span>
+                                    <i class="fas fa-share-alt share-icon"></i>
+                                </div>
+                                <div class="detailed-buttons">
+                                    <button class="btn btn-borrow">RESERVAR</button>
+                                    <button class="btn btn-preview">PEGAR EMPRESTADO</button>
+                                </div>
+                                <p class="detailed-description"></p>
+                                <div class="detailed-tags">
+                                    <span>Fiction</span>
+                                </div>
+                                <button class="btn-view-more">VER MAIS ></button>
+                            </div>
+                        `;
+                // Insert the new detailed view after the carousel
+                bookCarouselSection.appendChild(detailedView);
+
+                // Attach close event listener to the newly created close button
+                detailedView.querySelector('.close-inline-view').addEventListener('click', function () {
+                    detailedView.classList.remove('active');
+                    currentActiveDetailedView = null;
+                });
+            }
+
+            // Populate and show the detailed view
+            const title = this.dataset.title || 'Título Desconhecido';
+            const description = this.dataset.description || 'Sem descrição.';
+            const imgSrc = this.querySelector('img') ? this.querySelector('img').src : 'https://via.placeholder.com/150';
+            const author = this.dataset.author || 'Autor Desconhecido';
+
+            detailedView.querySelector('.detailed-cover-img').src = imgSrc;
+            detailedView.querySelector('.detailed-title').textContent = title;
+            detailedView.querySelector('.detailed-author').textContent = author;
+            detailedView.querySelector('.detailed-description').textContent = description;
+
+            detailedView.classList.add('active'); // Show it
+            currentActiveDetailedView = detailedView; // Set as current active
+        });
+    });
+
+    // Removed the old close button and overlay click listeners as they belong to the modal
 });
