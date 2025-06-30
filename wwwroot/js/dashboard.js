@@ -1,7 +1,8 @@
 // Function to fetch and update dashboard counts
 async function updateDashboardCounts() {
     try {
-        const response = await fetch('/Dashboard/GetDashboardCounts');
+        // Change URL to target BibliotecarioController
+        const response = await fetch('/Bibliotecario/GetDashboardCounts');
         const data = await response.json();
 
         document.getElementById('activeLoansCount').innerText = data.activeLoans;
@@ -21,7 +22,8 @@ async function updateDashboardCounts() {
 // Function to render the Area Chart (Recent Loans)
 async function renderAreaChart() {
     try {
-        const response = await fetch('/Dashboard/GetRecentLoansChartData');
+        // Change URL to target BibliotecarioController
+        const response = await fetch('/Bibliotecario/GetRecentLoansChartData');
         const data = await response.json();
 
         const labels = data.map(item => item.Month);
@@ -84,7 +86,8 @@ async function renderAreaChart() {
 // Function to render the Bar Chart (Books by Sector)
 async function renderBarChart() {
     try {
-        const response = await fetch('/Dashboard/GetBooksBySectorChartData');
+        // Change URL to target BibliotecarioController
+        const response = await fetch('/Bibliotecario/GetBooksBySectorChartData');
         const data = await response.json();
 
         const labels = data.map(item => item.Sector);
@@ -137,8 +140,9 @@ async function renderBarChart() {
 function initializeRecentLoansTable() {
     $('#datatablesSimple').DataTable({
         ajax: {
-            url: '/Dashboard/GetLatestLoans', // Your endpoint to fetch latest loans
-            dataSrc: 'data' // DataTables expects the data array within a 'data' property
+            // Change URL to target BibliotecarioController
+            url: '/Bibliotecario/GetLatestLoans',
+            dataSrc: 'data'
         },
         columns: [
             { data: 'BookTitle' },
@@ -147,7 +151,7 @@ function initializeRecentLoansTable() {
             { data: 'ReturnDate' },
             { data: 'Status' }
         ],
-        order: [[2, 'desc']] // Order by LoanDate descending by default
+        order: [[2, 'desc']]
     });
 }
 
@@ -156,5 +160,5 @@ window.addEventListener('DOMContentLoaded', event => {
     updateDashboardCounts();
     renderAreaChart();
     renderBarChart();
-    initializeRecentLoansTable(); // Initialize DataTables with AJAX data
+    initializeRecentLoansTable();
 });
