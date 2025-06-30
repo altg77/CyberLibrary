@@ -17,8 +17,7 @@ namespace CyberLibrary2.Models
         public string Cargo { get; set; } = "Aluno";
 
 
-        [StringLength(500, ErrorMessage = "A URL da imagem não pode exceder 500 caracteres.")]
-        public byte[]? ImagemUrl { get; set; }
+        public string? ImagemUrl { get; set; }
 
 
         [Phone(ErrorMessage = "Formato de telefone inválido.")]

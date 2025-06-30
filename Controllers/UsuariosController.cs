@@ -18,7 +18,6 @@ public class UsuariosController : Controller
         _usuarioRep = usuarioRep;
     }
 
-
     //Authentição de Usuario
     [AllowAnonymous]
     public IActionResult Login()
@@ -46,17 +45,17 @@ public class UsuariosController : Controller
         if (usuario != null)
         {
             var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
-                new Claim(ClaimTypes.Name, usuario.Nome),
-                new Claim(ClaimTypes.Email, usuario.Email),
-                new Claim(ClaimTypes.Role, usuario.Cargo)
-            };
+        {
+            new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
+            new Claim(ClaimTypes.Name, usuario.Nome),
+            new Claim(ClaimTypes.Email, usuario.Email),
+            new Claim(ClaimTypes.Role, usuario.Cargo)
+        };
 
-            // Add ImagemUrl as a claim if it exists
-            if (usuario.ImagemUrl != null && usuario.ImagemUrl.Length > 0)
+            // Adicionar ImagemUrl (agora um caminho string) como uma claim se ela existir
+            if (!string.IsNullOrEmpty(usuario.ImagemUrl))
             {
-                claims.Add(new Claim("ProfilePicture", Convert.ToBase64String(usuario.ImagemUrl)));
+                claims.Add(new Claim("ProfilePictureUrl", usuario.ImagemUrl));
             }
 
             var claimsIdentity = new ClaimsIdentity(
@@ -64,8 +63,8 @@ public class UsuariosController : Controller
 
             var authProperties = new AuthenticationProperties
             {
-                IsPersistent = true, // Remember me functionality
-                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30) // Cookie expires in 30 minutes
+                IsPersistent = true,
+                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30)
             };
 
             await HttpContext.SignInAsync(
@@ -145,43 +144,64 @@ public class UsuariosController : Controller
         return View(usuario);
     }
 
+    // Em UsuariosController.cs
     [HttpPost]
     public async Task<ActionResult> Atualizar(Usuario usuario, IFormFile? ImagemArq, string? NovaSenha, string? ConfirmarSenha)
     {
         var existingUsuario = _usuarioRep.BuscarId(usuario.Id);
         if (existingUsuario == null)
         {
-            return NotFound(); // Usuário não encontrado, trate de acordo
+            return NotFound();
         }
 
-        // Mantenha a imagem atual se nenhuma nova imagem for carregada
-        byte[]? imageBytes = existingUsuario.ImagemUrl;
-
+        // Lidar com o upload da imagem e salvar o caminho
         if (ImagemArq != null && ImagemArq.Length > 0)
         {
-            using (var memoryStream = new MemoryStream())
+            // Defina o caminho onde as imagens serão salvas
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "profile_pictures");
+            if (!Directory.Exists(uploadsFolder))
             {
-                await ImagemArq.CopyToAsync(memoryStream);
-                imageBytes = memoryStream.ToArray();
+                Directory.CreateDirectory(uploadsFolder);
             }
+
+            // Gerar um nome de arquivo único
+            var uniqueFileName = Guid.NewGuid().ToString() + "_" + ImagemArq.FileName;
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await ImagemArq.CopyToAsync(fileStream);
+            }
+
+            // Armazenar o caminho relativo no banco de dados
+            existingUsuario.ImagemUrl = $"/images/profile_pictures/{uniqueFileName}";
+        }
+        // Se nenhuma nova imagem for carregada, mantenha a ImagemUrl existente
+        else if (!string.IsNullOrEmpty(existingUsuario.ImagemUrl))
+        {
+            existingUsuario.ImagemUrl = existingUsuario.ImagemUrl;
+        }
+        else
+        {
+            existingUsuario.ImagemUrl = null; // Ou uma URL de imagem padrão
         }
 
-        // Atualize as propriedades do usuário a partir do envio do formulário
+
+        // Atualizar outras propriedades do usuário
         existingUsuario.Nome = usuario.Nome;
         existingUsuario.Email = usuario.Email;
         existingUsuario.Telefone = usuario.Telefone;
-        existingUsuario.ImagemUrl = imageBytes; // Atribua os bytes da imagem potencialmente nova ou existente
 
-        // Lide com a atualização da senha
+        // Lidar com a atualização da senha
         if (!string.IsNullOrEmpty(NovaSenha))
         {
             if (NovaSenha != ConfirmarSenha)
             {
                 ModelState.AddModelError("NovaSenha", "A nova senha e a confirmação de senha não coincidem.");
-                return View("Perfil", existingUsuario); // Retorne para a view do perfil com erro
+                return View("Perfil", existingUsuario);
             }
             // Em uma aplicação real, você deve fazer hash da nova senha aqui
-            existingUsuario.Senha = NovaSenha; // Apenas para demonstração, atribuindo diretamente
+            existingUsuario.Senha = NovaSenha;
         }
 
         if (ModelState.IsValid)
@@ -190,6 +210,7 @@ public class UsuariosController : Controller
             {
                 _usuarioRep.Atualizar(existingUsuario);
 
+                // Reautenticar o usuário com claims atualizadas (excluindo os dados grandes da imagem)
                 var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, existingUsuario.Id.ToString()),
@@ -198,9 +219,10 @@ public class UsuariosController : Controller
                 new Claim(ClaimTypes.Role, existingUsuario.Cargo)
             };
 
-                if (existingUsuario.ImagemUrl != null && existingUsuario.ImagemUrl.Length > 0)
+                // Adicionar a URL da imagem como uma claim se ela existir
+                if (!string.IsNullOrEmpty(existingUsuario.ImagemUrl))
                 {
-                    claims.Add(new Claim("ProfilePicture", Convert.ToBase64String(existingUsuario.ImagemUrl)));
+                    claims.Add(new Claim("ProfilePictureUrl", existingUsuario.ImagemUrl));
                 }
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

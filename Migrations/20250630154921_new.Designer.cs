@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CyberLibrary2.Migrations
 {
     [DbContext(typeof(BancoContext))]
-    [Migration("20250630151701_Sl")]
-    partial class Sl
+    [Migration("20250630154921_new")]
+    partial class @new
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

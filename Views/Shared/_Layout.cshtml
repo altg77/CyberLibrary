@@ -34,17 +34,21 @@
                 <ul class="navbar-nav">
                     @if (User.Identity.IsAuthenticated)
                     {
-                        var profilePictureBase64 = User.FindFirst("ProfilePicture")?.Value;
-                        var profilePictureSrc = string.IsNullOrEmpty(profilePictureBase64) ?
-                        "https://w7.pngwing.com/pngs/1000/665/png-transparent-computer-icons-profile-s-free-angle-sphere-profile-cliparts-free.png"
-                        :
-                        $"data:image/jpeg;base64,{profilePictureBase64}";
+                        var profilePictureUrl = User.FindFirst("ProfilePictureUrl")?.Value;
 
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                                <img src="@profilePictureSrc" alt="Foto de Perfil" class="rounded-circle"
+                                @if (!string.IsNullOrEmpty(profilePictureUrl))
+                                {
+                                    <img src="@profilePictureUrl" alt="Foto de Perfil" class="rounded-circle"
                                     style="width: 40px; height: 40px;">
+                                }
+                                else
+                                {
+                                    <img src="/images/default_profile.png" alt="Foto de Perfil" class="rounded-circle"
+                                    style="width: 40px; height: 40px;">
+                                }
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-name">@User.Identity.Name</a></li>
@@ -147,13 +151,15 @@
                             <li class="bardness"></li>
 
                             <li class="@(currentController == "Aluno" && currentAction == "Emprestimos" ? "active" : "")">
-                                <a asp-controller="Aluno" asp-action="Emprestimos"><i class="fas fa-book"></i> <span>Emprestimo de
+                                <a asp-controller="Aluno" asp-action="Emprestimos"><i class="fas fa-book"></i> <span>Emprestimo
+                                        de
                                         Livros</span></a>
                             </li>
                             <li class="@(currentController == "Aluno" && currentAction == "Devolvidos" ? "active" : "")">
-                                <a asp-controller="Aluno" asp-action="Devolvidos"><i class="fas fa-users"></i> <span>Devolvidos</span></a>
+                                <a asp-controller="Aluno" asp-action="Devolvidos"><i class="fas fa-users"></i>
+                                    <span>Devolvidos</span></a>
                             </li>
-                             <li class="@(currentController == "Usuarios" && currentAction == "Perfil" ? "active" : "")">
+                            <li class="@(currentController == "Usuarios" && currentAction == "Perfil" ? "active" : "")">
                                 <a asp-controller="Usuarios" asp-action="Perfil"><i class="fas fa-user-circle"></i> <span>Minha
                                         Conta</span></a>
                             </li>
