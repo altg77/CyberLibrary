@@ -20,7 +20,6 @@ namespace CyberLibrary2.Models
         public string? Prateleira { get; set; }
         public string? Sinopse { get; set; }
         public string? Categoria { get; set; }
-        public string? Formato { get; set; }
         public byte[]? CapaImagem { get; set; }
 
         //Quantidade

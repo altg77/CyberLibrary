@@ -56,19 +56,14 @@
                     <input type="text" asp-for="Titulo" class="form-control" placeholder="Nome do livro">
                 </div>
 
-                <div class="mb-3">
-                    <label for="autor" class="form-label">Autor</label>
-                    <input type="text" asp-for="Autor" class="form-control" placeholder="Autor da obra">
-                </div>
-
                 <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="autor" class="form-label">Autor</label>
+                    <input type="text" asp-for="Autor" class="form-control" placeholder="Autor da obra">
+                    </div>
                     <div class="col-md-6">
                         <label for="editora" class="form-label">Editora</label>
                         <input type="text" asp-for="Editora" class="form-control" placeholder="Editora da obra">
-                    </div>
-                    <div class="col-md-6">
-                        <label for="setor" class="form-label">Setor</label>
-                        <input type="text" asp-for="Setor" class="form-control">
                     </div>
                 </div>
 
@@ -94,7 +89,7 @@
 
                 <div class="d-flex justify-content-end mt-4">
                     <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-                    <a asp-controller="Livro" asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                    <a asp-controller="Livros" asp-action="Index" class="btn btn-secondary">Cancelar</a>
                 </div>
             </div>
         </div>

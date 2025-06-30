@@ -19,7 +19,6 @@ namespace CyberLibrary2.repository
 
         public Emprestimo AdicionarEmprestimo(Emprestimo emprestimo)
         {
-            // Eager loading for Livro and Usuario
             emprestimo.Livro = _bancoContext.Livros.FirstOrDefault(l => l.Id == emprestimo.LivroId);
             emprestimo.Usuario = _bancoContext.Usuarios.FirstOrDefault(u => u.Id == emprestimo.UsuarioId);
 
@@ -128,7 +127,7 @@ namespace CyberLibrary2.repository
             }
 
             _bancoContext.Emprestimos.Update(emprestimoDB);
-            _bancoContext.Livros.Update(livro); // Update the book's availability
+            _bancoContext.Livros.Update(livro); 
             _bancoContext.SaveChanges();
             return true;
         }

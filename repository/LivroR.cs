@@ -46,7 +46,6 @@ namespace CyberLibrary2.repository
             livroDB.Prateleira = livro.Prateleira;
             livroDB.Sinopse = livro.Sinopse;
             livroDB.Categoria = livro.Categoria;
-            livroDB.Formato = livro.Formato;
 
             if (livro.CapaImagem != null)
             {

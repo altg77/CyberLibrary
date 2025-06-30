@@ -4,16 +4,19 @@ using CyberLibrary2.Models;
 using CyberLibrary2.Contratos;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.AspNetCore.Authorization;
+using System.Linq;
 
 namespace CyberLibrary2.Controllers;
 
 public class LivrosController : Controller
 {
     private readonly ILivroR livro_rep;
+    private readonly ICategoriaR _categoriaRep;
 
-    public LivrosController(ILivroR livroRep)
+    public LivrosController(ILivroR livroRep, ICategoriaR categoriaRep)
     {
         livro_rep = livroRep;
+        _categoriaRep = categoriaRep;
     }
 
     [Authorize]
@@ -25,6 +28,7 @@ public class LivrosController : Controller
 
     public IActionResult Adicionar()
     {
+        ViewBag.CategoriasDisponiveis = _categoriaRep.ListarCategorias();
         return View();
     }
 
@@ -46,6 +50,7 @@ public class LivrosController : Controller
             return RedirectToAction("Index");
         }
 
+        ViewBag.CategoriasDisponiveis = _categoriaRep.ListarCategorias();
         return View(livro);
     }
 

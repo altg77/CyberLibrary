@@ -18,14 +18,12 @@ namespace CyberLibrary2.Controllers
             _usuarioRepository = usuarioRepository;
         }
 
-        // GET: Emprestimos
         public IActionResult Index()
         {
             List<Emprestimo> emprestimos = _emprestimoRepository.ListarEmprestimos();
             return View(emprestimos);
         }
 
-        // GET: Emprestimos/Adicionar
         public IActionResult Adicionar()
         {
             ViewBag.Livros = new SelectList(_livroRepository.listarLivros().Where(l => l.QuantidadeDisponivel > 0), "Id", "Titulo");
@@ -33,15 +31,13 @@ namespace CyberLibrary2.Controllers
             return View();
         }
 
-        // POST: Emprestimos/Adicionar
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Adicionar(Emprestimo emprestimo)
         {
-            // Remove validation for navigation properties if they are not directly bound
             ModelState.Remove("Livro");
             ModelState.Remove("Usuario");
-            ModelState.Remove("Devolvido"); // Devolvido is false by default on creation
+            ModelState.Remove("Devolvido"); 
 
             if (ModelState.IsValid)
             {
@@ -63,7 +59,6 @@ namespace CyberLibrary2.Controllers
             return View(emprestimo);
         }
 
-        // GET: Emprestimos/Editar/5
         public IActionResult Editar(int id)
         {
             Emprestimo emprestimo = _emprestimoRepository.BuscarEmprestimoPorId(id);
@@ -81,7 +76,6 @@ namespace CyberLibrary2.Controllers
             return View(emprestimo);
         }
 
-        // POST: Emprestimos/Atualizar
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Atualizar(Emprestimo emprestimo)
@@ -103,7 +97,6 @@ namespace CyberLibrary2.Controllers
                 }
             }
 
-            // If we got this far, something failed, redisplay form
             var availableBooks = _livroRepository.listarLivros()
                                                   .Where(l => l.QuantidadeDisponivel > 0 || l.Id == emprestimo.LivroId)
                                                   .ToList();
@@ -112,7 +105,6 @@ namespace CyberLibrary2.Controllers
             return View("Editar", emprestimo);
         }
 
-        // GET: Emprestimos/ConfirmarRemocao/5
         public IActionResult ConfirmarRemocao(int id)
         {
             Emprestimo emprestimo = _emprestimoRepository.BuscarEmprestimoPorId(id);
@@ -123,7 +115,6 @@ namespace CyberLibrary2.Controllers
             return View(emprestimo);
         }
 
-        // POST: Emprestimos/Remover/5
         [HttpPost, ActionName("Remover")]
         [ValidateAntiForgeryToken]
         public IActionResult RemoverConfirmado(int id)
@@ -141,7 +132,6 @@ namespace CyberLibrary2.Controllers
             }
         }
 
-        // POST: Emprestimos/RegistrarDevolucao/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult RegistrarDevolucao(int id)

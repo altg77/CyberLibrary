@@ -54,20 +54,15 @@
                     <input type="text" asp-for="Titulo" id="titulo" class="form-control" placeholder="Nome do livro">
                 </div>
 
-                <div class="mb-3">
-                    <label for="autor" class="form-label">Autor</label>
-                    <input type="text" asp-for="Autor" id="autor" class="form-control" placeholder="Autor da obra">
-                </div>
-
                 <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="autor" class="form-label">Autor</label>
+                        <input type="text" asp-for="Autor" id="autor" class="form-control" placeholder="Autor da obra">
+                    </div>
                     <div class="col-md-6">
                         <label for="editora" class="form-label">Editora</label>
                         <input type="text" asp-for="Editora" id="editora" class="form-control"
                             placeholder="Editora da obra">
-                    </div>
-                    <div class="col-md-6">
-                        <label for="setor" class="form-label">Setor</label>
-                        <input type="text" asp-for="Setor" id="setor" class="form-control" value="Setor">
                     </div>
                 </div>
 
@@ -76,23 +71,23 @@
                         <label for="categoria" class="form-label">Categoria</label>
                         <select class="form-select" asp-for="Categoria" id="categoria">
                             <option value="">Selecione...</option>
-                            <option value="Literatura Clássica">Literatura Clássica</option>
-                            <option value="Romance">Romance</option>
-                            <option value="Ficção Científica">Ficção Científica</option>
-                            <option value="História">História</option>
-                            <option value="Tecnologia">Tecnologia</option>
-                            <option value="Fantasia">Fantasia</option>
-                            <option value="Biografia">Biografia</option>
-                            <option value="Outro">Outro</option>
+                            @if (ViewBag.CategoriasDisponiveis != null)
+                            {
+                                foreach (var categoria in ViewBag.CategoriasDisponiveis)
+                                {
+                                    <option value="@categoria.Nome">@categoria.Nome</option>
+                                }
+                            }
                         </select>
+                        <span asp-validation-for="Categoria" class="text-danger"></span>
                     </div>
+
                     <div class="col-md-6">
-                        <label for="formato" class="form-label">Formato</label>
-                        <select class="form-select" asp-for="Formato" id="formato">
+                        <label for="setor" class="form-label">Setor</label>
+                        <select class="form-select" asp-for="Setor" id="setor">
                             <option value="">Selecione...</option>
-                            <option value="Capa Dura">Capa Dura</option>
-                            <option value="Brochura">Brochura</option>
-                            <option value="Digital (e-book)">Digital (e-book)</option>
+                            <option value="Literatura Clássica">Literatura Clássica</option>
+                            <option value="Outro">Outro</option>
                         </select>
                     </div>
                 </div>
