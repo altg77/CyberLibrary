@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CyberLibrary2")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+12d7e40d28256f9697c072da079c056b78e73fd5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+180cd2995e86d1aa0fdab999299c3d285c726e2b")]
 [assembly: System.Reflection.AssemblyProductAttribute("CyberLibrary2")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CyberLibrary2")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

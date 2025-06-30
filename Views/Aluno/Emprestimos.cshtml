@@ -30,30 +30,40 @@
     </div>
 </div>
 
-<div class="head">
-    <h1>Recentes</h1>
+<div class="Separation">
+    <div class="head">
+    <h1>Recomendados para você</h1>
     <button class="view-more">VER MAIS</button>
 </div>
 
 <section class="book-carousel">
-    @if (Model.LivrosRecentes != null && Model.LivrosRecentes.Any())
-    {
-        @foreach (var livro in Model.LivrosRecentes)
-        {
-            <div class="book-item" data-book-id="@livro.Id" data-title="@livro.Titulo" data-author="@livro.Autor"
-                data-description="@livro.Sinopse" data-cover-url="@Url.Content(livro.CapaUrl ?? "/images/placeholder.png")"> @* Passe a URL da capa aqui *@
-                <img src="@Url.Content(livro.CapaUrl ?? "/images/placeholder.png")" alt="Capa do livro @livro.Titulo">
-                <p>@livro.Titulo</p>
-                <div class="book-options">
-                    <i class="fas fa-ellipsis-h"></i>
-                </div>
-            </div>
-        }
-    }
-    else
-    {
-        <p>Nenhum livro recente disponível.</p>
-    }
+    <div class="book-item" data-book-id="1"
+        data-description="Sung Jinwoo, a weak E-Rank hunter, barely survives a deadly dungeon. He then gains a unique ability to level up, becoming the 'Shadow Monarch' and fighting monstrous threats.">
+        <img src="https://m.media-amazon.com/images/I/81OYRZEQG7L._UF1000,1000_QL80_.jpg" alt="Pescar truta na América">
+        <p>Solo leveling</p>
+        <div class="book-options">
+            <i class="fas fa-ellipsis-h"></i>
+        </div>
+    </div>
+    <div class="book-item" data-book-id="2"
+        data-description="Monkey D. Luffy, a boy whose body gains the properties of rubber after unintentionally eating a Devil Fruit, sets sail from the East Blue Sea to find the 'One Piece,' the ultimate treasure, and become the King of the Pirates.">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8uSVWEs2y3DfCPXiGs4H-eZ7qbg6wd3rVXw&s"
+            alt="Orlando: uma biografia">
+        <p>One piece</p>
+        <div class="book-options">
+            <i class="fas fa-ellipsis-h"></i>
+        </div>
+    </div>
+    <div class="book-item" data-book-id="3" data-title="Monster" data-author="Draian"
+        data-description="Dr. Kenzo Tenma, a brilliant neurosurgeon, chooses to save a young boy over the mayor, leading to a series of mysterious deaths and a terrifying hunt for a charismatic serial killer known only as 'Monster.'">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2g0WGq6wShvviPkylkOmelCeELhNM2RQOzQ&s"
+            alt="A chave de casa">
+        <p>Monster</p>
+        <div class="book-options">
+            <i class="fas fa-ellipsis-h"></i>
+        </div>
+    </div>
+
 </section>
 
 <section class="detailed-book-view hidden">
@@ -63,69 +73,7 @@
     </div>
     <div class="detailed-book-content">
         <div class="detailed-book-cover">
-            <img src="" alt="Capa do livro">
-            <div class="book-actions">
-                <i class="fas fa-ellipsis-h"></i>
-            </div>
-        </div>
-        <div class="detailed-book-info">
-            <h2 class="detailed-book-title"></h2>
-            <p class="detailed-book-author"></p>
-            <div class="detailed-book-rating">
-                <i class="fas fa-star filled"></i>
-                <i class="fas fa-star filled"></i>
-                <i class="fas fa-star filled"></i>
-                <i class="fas fa-star filled"></i>
-                <i class="fas fa-star"></i>
-                <span class="star-count"></span>
-                <i class="fas fa-share-alt share-icon"></i>
-            </div>
-            <div class="detailed-book-buttons">
-                <button class="btn btn-borrow">RESERVAR</button>
-                <button class="btn btn-preview">PEGAR EMPRESTADO</button>
-            </div>
-            <p class="detailed-book-description"></p>
-            <div class="detailed-book-tags">
-                </div>
-            <button class="btn-view-more">VER MAIS ></button>
-        </div>
-    </div>
-</section>
-
-<div class="head">
-    <h1>Mangás disponíveis</h1>
-    <button class="view-more">VER MAIS</button>
-</div>
-
-<section class="book-carousel">
-    @if (Model.MangasDisponiveis != null && Model.MangasDisponiveis.Any())
-    {
-        @foreach (var livro in Model.MangasDisponiveis)
-        {
-            <div class="book-item" data-book-id="@livro.Id" data-title="@livro.Titulo" data-author="@livro.Autor"
-                data-description="@livro.Sinopse" data-cover-url="@Url.Content(livro.CapaUrl ?? "/images/placeholder.png")">
-                <img src="@Url.Content(livro.CapaUrl ?? "/images/placeholder.png")" alt="Capa do mangá @livro.Titulo">
-                <p>@livro.Titulo</p>
-                <div class="book-options">
-                    <i class="fas fa-ellipsis-h"></i>
-                </div>
-            </div>
-        }
-    }
-    else
-    {
-        <p>Nenhum mangá disponível.</p>
-    }
-</section>
-
-<section class="detailed-book-view hidden">
-    <div class="detailed-book-header">
-        <span class="detailed-book-path"></span>
-        <button class="close-detailed-view">&times;</button>
-    </div>
-    <div class="detailed-book-content">
-        <div class="detailed-book-cover">
-            <img src="" alt="Capa do livro">
+            <img src="imagem_2025-06-25_154827798_chave_de_casa_full.jpg" alt="Capa do livro A chave de casa">
             <div class="book-actions">
                 <i class="fas fa-ellipsis-h"></i>
             </div>
@@ -157,29 +105,91 @@
 
 
 <div class="head">
-    <h1>Para Explorar</h1>
+    <h1>Mangas disponiveis</h1>
     <button class="view-more">VER MAIS</button>
 </div>
 
 <section class="book-carousel">
-    @if (Model.ParaExplorar != null && Model.ParaExplorar.Any())
-    {
-        @foreach (var livro in Model.ParaExplorar)
-        {
-            <div class="book-item" data-book-id="@livro.Id" data-title="@livro.Titulo" data-author="@livro.Autor"
-                data-description="@livro.Sinopse" data-cover-url="@Url.Content(livro.CapaUrl ?? "/images/placeholder.png")">
-                <img src="@Url.Content(livro.CapaUrl ?? "/images/placeholder.png")" alt="Capa do livro @livro.Titulo">
-                <p>@livro.Titulo</p>
-                <div class="book-options">
-                    <i class="fas fa-ellipsis-h"></i>
-                </div>
-            </div>
-        }
-    }
-    else
-    {
-        <p>Nenhum livro para explorar.</p>
-    }
+    <div class="book-item" data-book-id="1"
+        data-description="Sung Jinwoo, a weak E-Rank hunter, barely survives a deadly dungeon. He then gains a unique ability to level up, becoming the 'Shadow Monarch' and fighting monstrous threats.">
+        <img src="https://m.media-amazon.com/images/I/81OYRZEQG7L._UF1000,1000_QL80_.jpg" alt="Pescar truta na América">
+        <p>Solo leveling</p>
+        <div class="book-options">
+            <i class="fas fa-ellipsis-h"></i>
+        </div>
+    </div>
+    <div class="book-item" data-book-id="2"
+        data-description="Monkey D. Luffy, a boy whose body gains the properties of rubber after unintentionally eating a Devil Fruit, sets sail from the East Blue Sea to find the 'One Piece,' the ultimate treasure, and become the King of the Pirates.">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8uSVWEs2y3DfCPXiGs4H-eZ7qbg6wd3rVXw&s"
+            alt="Orlando: uma biografia">
+        <p>One piece</p>
+        <div class="book-options">
+            <i class="fas fa-ellipsis-h"></i>
+        </div>
+    </div>
+    <div class="book-item" data-book-id="3" data-title="Monster" data-author="Draian"
+        data-description="Dr. Kenzo Tenma, a brilliant neurosurgeon, chooses to save a young boy over the mayor, leading to a series of mysterious deaths and a terrifying hunt for a charismatic serial killer known only as 'Monster.'">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2g0WGq6wShvviPkylkOmelCeELhNM2RQOzQ&s"
+            alt="A chave de casa">
+        <p>Monster</p>
+        <div class="book-options">
+            <i class="fas fa-ellipsis-h"></i>
+        </div>
+    </div>
+    <div class="book-item" data-book-id="4"
+        data-description="In 1997, Kenji Endo, a convenience store manager, discovers that a mysterious cult led by 'Friend' is using symbols and prophecies from his childhood notebook to orchestrate real-world disasters and global domination.">
+        <img src="https://d14d9vp3wdof84.cloudfront.net/image/589816272436/image_qjg2u5p7ht1atb88puo0bf1n5k/-S897-FWEBP"
+            alt="Também guardamos pedras aqui">
+        <p>20TH Century boys</p>
+        <div class="book-options">
+            <i class="fas fa-ellipsis-h"></i>
+        </div>
+    </div>
+    <div class="book-item" data-book-id="5"
+        data-description="Yuji Itadori, a high school student, joins a secret organization of Jujutsu Sorcerers to kill a powerful Curse named Ryomen Sukuna, whose finger he consumed, becoming his vessel.">
+        <img src="https://infinitasvidas.wordpress.com/wp-content/uploads/2021/03/poster-jujutsu-kaisen.png"
+            alt="Minha irmã, a serial killer">
+        <p>Jujutsu-kaisen</p>
+        <div class="book-options">
+            <i class="fas fa-ellipsis-h"></i>
+        </div>
+    </div>
+    <div class="book-item" data-book-id="6"
+        data-description="A 37-year-old salaryman is stabbed and reincarnated in a fantasy world as a slime named Rimuru Tempest, gaining unique abilities and becoming the leader of a new nation for monsters.">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQesMUHO_W61Dgh9o4ZvRv2Ofw6oX6QVqKQCQ&s"
+            alt="A morte de Ivan Ilitch em quadrinhos">
+        <p>Time in gold slime </p>
+        <div class="book-options">
+            <i class="fas fa-ellipsis-h"></i>
+        </div>
+    </div>
+    <div class="book-item" data-book-id="7"
+        data-description="Momo Ayase and Ken Takakura, two high school students with opposing beliefs about the supernatural, find themselves entangled in bizarre encounters with aliens and spirits, leading to thrilling and comedic adventures.">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB0IznHjHoNhPCbWXC0IfhTliG7pWJzyp3Uw&s"
+            alt="O corpo encantado das ruas">
+        <p>DanDaDan</p>
+        <div class="book-options">
+            <i class="fas fa-ellipsis-h"></i>
+        </div>
+    </div>
+    <div class="book-item" data-book-id="8"
+        data-description="Based on the life of legendary swordsman Miyamoto Musashi, the story follows Takezo Shinmen as he abandons his violent past to pursue enlightenment through the path of the sword, becoming Musashi.">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRV6Iwz1OuZMExb7w0CAmfbqX50AgINhnPM3A&s"
+            alt="A distância até a cerejeira">
+        <p>Vagabond</p>
+        <div class="book-options">
+            <i class="fas fa-ellipsis-h"></i>
+        </div>
+    </div>
+    <div class="book-item" data-book-id="9"
+        data-description="Kenshin Himura, a former legendary assassin known as 'Hitokiri Battousai,' wanders Japan as a pacifist rurouni, or wanderer, carrying a reverse-blade sword and dedicating himself to protecting the innocent.">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQILDFusrZB_Y-k3N-hWAFlCgi7B4jNwQCKcg&s"
+            alt="Êxtase e outros contos">
+        <p>Samurai X</p>
+        <div class="book-options">
+            <i class="fas fa-ellipsis-h"></i>
+        </div>
+    </div>
 </section>
 
 <section class="detailed-book-view hidden">
@@ -189,7 +199,7 @@
     </div>
     <div class="detailed-book-content">
         <div class="detailed-book-cover">
-            <img src="" alt="Capa do livro">
+            <img src="imagem_2025-06-25_154827798_chave_de_casa_full.jpg" alt="Capa do livro A chave de casa">
             <div class="book-actions">
                 <i class="fas fa-ellipsis-h"></i>
             </div>
@@ -218,7 +228,6 @@
         </div>
     </div>
 </section>
-
 
 <div class="head">
     <h1>Livros de Machado de Assis</h1>
@@ -226,24 +235,32 @@
 </div>
 
 <section class="book-carousel" id="machado-carousel">
-    @if (Model.LivrosMachadoDeAssis != null && Model.LivrosMachadoDeAssis.Any())
-    {
-        @foreach (var livro in Model.LivrosMachadoDeAssis)
-        {
-            <div class="book-item" data-book-id="@livro.Id" data-title="@livro.Titulo" data-author="@livro.Autor"
-                data-description="@livro.Sinopse" data-cover-url="@Url.Content(livro.CapaUrl ?? "/images/placeholder.png")">
-                <img src="@Url.Content(livro.CapaUrl ?? "/images/placeholder.png")" alt="Capa do livro @livro.Titulo">
-                <p>@livro.Titulo</p>
-                <div class="book-options">
-                    <i class="fas fa-ellipsis-h"></i>
-                </div>
-            </div>
-        }
-    }
-    else
-    {
-        <p>Nenhum livro de Machado de Assis disponível.</p>
-    }
+    <div class="book-item" data-book-id="10" data-title="Dom Casmurro" data-author="Machado de Assis"
+        data-description="A classic Brazilian novel exploring themes of jealousy, betrayal, and memory through the unreliable narration of Bento Santiago, who suspects his wife, Capitu, of adultery.">
+        <img src="https://m.media-amazon.com/images/I/61Z2bMhGicL.jpg" alt="Dom Casmurro Cover">
+        <p>Dom Casmurro</p>
+        <div class="book-options">
+            <i class="fas fa-ellipsis-h"></i>
+        </div>
+    </div>
+    <div class="book-item" data-book-id="11" data-title="Memórias Póstumas de Brás Cubas" data-author="Machado de Assis"
+        data-description="Narrated by a deceased man, Brás Cubas, this satirical novel offers a cynical yet humorous look at 19th-century Brazilian society, philosophy, and human nature.">
+        <img src="https://m.media-amazon.com/images/I/71OL9RU2tJL._UF1000,1000_QL80_.jpg"
+            alt="Memórias Póstumas de Brás Cubas Cover">
+        <p>Memórias Póstumas de Brás Cubas</p>
+        <div class="book-options">
+            <i class="fas fa-ellipsis-h"></i>
+        </div>
+    </div>
+    <div class="book-item" data-book-id="12" data-title="O Alienista" data-author="Machado de Assis"
+        data-description="A satirical novella about Dr. Simão Bacamarte, an alienist who establishes an asylum and begins to classify the entire town's population as insane, blurring the lines between sanity and madness.">
+        <img src="https://upload.wikimedia.org/wikipedia/pt/c/c1/Resumo-do-livro-o-alienista-de-machado-de-assis.jpg"
+            alt="O Alienista Cover">
+        <p>O Alienista</p>
+        <div class="book-options">
+            <i class="fas fa-ellipsis-h"></i>
+        </div>
+    </div>
 </section>
 
 <section class="detailed-book-view hidden">
@@ -282,3 +299,4 @@
         </div>
     </div>
 </section>
+</div>
