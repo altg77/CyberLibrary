@@ -36,13 +36,18 @@ namespace CyberLibrary2.repository
         {
             Usuario usuarioDB = banco_context.Usuarios.FirstOrDefault(x => x.Id == usuario.Id);
 
+            if (usuarioDB == null)
+            {
+                throw new Exception("Usuário não encontrado para atualização.");
+            }
 
+            // Seus checks de unicidade (login e email) já estão aqui, o que é bom!
+            // Eles lançam exceções próprias, então o problema deve ser após eles.
             if (banco_context.Usuarios.Any(u => u.Login == usuario.Login && u.Id != usuario.Id))
             {
                 throw new Exception("O login informado já está em uso por outro usuário.");
             }
 
-            // Verifique se o novo email já existe para outro usuário
             if (banco_context.Usuarios.Any(u => u.Email == usuario.Email && u.Id != usuario.Id))
             {
                 throw new Exception("O email informado já está em uso por outro usuário.");
@@ -54,19 +59,37 @@ namespace CyberLibrary2.repository
             usuarioDB.Login = usuario.Login;
             usuarioDB.Telefone = usuario.Telefone;
             usuarioDB.TurmaId = usuario.TurmaId;
+            usuarioDB.ImagemUrl = usuario.ImagemUrl; // Mantenha esta linha
 
-            // Apenas atualize a senha se ela for fornecida (não vazia/nula)
             if (!string.IsNullOrEmpty(usuario.Senha))
             {
                 usuarioDB.Senha = usuario.Senha;
             }
 
-            // A imagem agora será tratada pela lógica do controlador
-            usuarioDB.ImagemUrl = usuario.ImagemUrl;
-
-            banco_context.Usuarios.Update(usuarioDB);
-            banco_context.SaveChanges();
-            return usuarioDB;
+            try
+            {
+                banco_context.Usuarios.Update(usuarioDB);
+                banco_context.SaveChanges(); // A exceção provavelmente acontece aqui
+                return usuarioDB;
+            }
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException ex)
+            {
+                // Esta exceção é do Entity Framework Core
+                // A InnerException conterá a causa raiz do problema no banco de dados
+                System.Diagnostics.Debug.WriteLine($"Erro ao salvar no banco de dados: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                    // Você pode até inspecionar ex.InnerException.InnerException se houver mais níveis
+                }
+                throw; // Relança a exceção para que o controller ainda a capture
+            }
+            catch (Exception ex)
+            {
+                // Outros tipos de exceção que podem ocorrer
+                System.Diagnostics.Debug.WriteLine($"Erro geral no repositório: {ex.Message}");
+                throw;
+            }
         }
 
         public bool Excluir(int id)
